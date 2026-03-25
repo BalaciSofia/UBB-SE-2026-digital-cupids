@@ -1,4 +1,8 @@
-﻿using Microsoft.UI.Xaml;
+﻿using matchmaking.Domain;
+using matchmaking.Repositories;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
@@ -8,6 +12,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -28,12 +33,28 @@ namespace matchmaking
     {
         private Window? _window;
 
+        public static string ConnectionString { get; private set; }
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
         public App()
         {
+            var config = new ConfigurationBuilder().AddJsonFile("appsettings.Development.json").Build();
+
+            // va creati, in fisierul proiectului, appsettings.Development.json, cu urmatorul continut:
+
+            //{
+            //    "ConnectionStrings": {
+            //        "DefaultConnection": "[connection string]"
+            //    }
+            //}
+
+            // apoi, click dreapta pe appsettings.Development.json, Properties, si setati "Copy to Output Directory" la "Copy if newer"
+
+            ConnectionString = config.GetConnectionString("DefaultConnection") ?? string.Empty;
+
             InitializeComponent();
         }
 
