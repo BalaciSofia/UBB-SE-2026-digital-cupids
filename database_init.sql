@@ -10,7 +10,7 @@ GO
 
 USE matchmaking_db;
 
-DROP TABLE IF EXISTS Interaction
+DROP TABLE IF EXISTS Interactions
 DROP TABLE IF EXISTS Matches
 DROP TABLE IF EXISTS ProfilePreferences
 DROP TABLE IF EXISTS Bids
@@ -42,7 +42,7 @@ CREATE TABLE Profiles (
 );
 GO
 
-CREATE TABLE INTERACTION (
+CREATE TABLE Interactions (
     interactionId INT IDENTITY(1, 1) PRIMARY KEY,
     fromProfileId INT FOREIGN KEY REFERENCES Profiles(userId),
     toProfileId INT FOREIGN KEY REFERENCES Profiles(userId),
@@ -140,19 +140,19 @@ INSERT INTO ProfileInterests (userId, interest) VALUES
 
 -- ProfilePreferences
 INSERT INTO ProfilePreferences (userId, gender) VALUES
-(1,  'Female'),
-(2,  'Male'),
-(3,  'Female'),
-(4,  'Male'),
-(5,  'Female'),
-(6,  'Male'),
-(7,  'Female'),
-(7,  'Non-Binary'),
-(8,  'Male'),
-(8,  'Female'),
-(9,  'Female'),
-(10, 'Male'),
-(10, 'Non-Binary');
+(1,  'FEMALE'),
+(2,  'MALE'),
+(3,  'FEMALE'),
+(4,  'MALE'),
+(5,  'FEMALE'),
+(6,  'MALE'),
+(7,  'FEMALE'),
+(7,  'NON_BINARY'),
+(8,  'MALE'),
+(8,  'FEMALE'),
+(9,  'FEMALE'),
+(10, 'MALE'),
+(10, 'NON_BINARY');
 
 -- Photos
 INSERT INTO Photos (userId, location) VALUES
@@ -170,27 +170,26 @@ INSERT INTO Photos (userId, location) VALUES
 (9,  'https://cdn.matchmaking.app/photos/user9_photo1.jpg'),
 (10, 'https://cdn.matchmaking.app/photos/user10_photo1.jpg');
 
--- Interactions
-INSERT INTO Interaction (fromProfileId, toProfileId, type) VALUES
-(1,  2,  'Like'),
-(2,  1,  'Like'),        -- mutual → match (1,2)
-(1,  4,  'Super Like'),
-(4,  1,  'Like'),        -- mutual → match (1,4)
-(3,  6,  'Like'),
-(6,  3,  'Like'),        -- mutual → match (3,6)
-(5,  8,  'Super Like'),
-(8,  5,  'Like'),        -- mutual → match (5,8)
-(7,  10, 'Like'),
-(10, 7,  'Like'),        -- mutual → match (7,10)
-(9,  2,  'Like'),
-(2,  9,  'Pass'),
-(3,  4,  'Pass'),
-(5,  6,  'Like'),
-(6,  5,  'Pass'),
-(7,  1,  'Like'),
-(1,  7,  'Pass'),
-(10, 3,  'Super Like'),
-(3,  10, 'Pass');
+INSERT INTO Interactions (fromProfileId, toProfileId, [type]) VALUES
+(1,  2,  'LIKE'),
+(2,  1,  'LIKE'),
+(1,  4,  'SUPER_LIKE'),
+(4,  1,  'LIKE'),
+(3,  6,  'LIKE'),
+(6,  3,  'LIKE'),
+(5,  8,  'SUPER_LIKE'),
+(8,  5,  'LIKE'),
+(7,  10, 'LIKE'),
+(10, 7,  'LIKE'),
+(9,  2,  'LIKE'),
+(2,  9,  'PASS'),
+(3,  4,  'PASS'),
+(5,  6,  'LIKE'),
+(6,  5,  'PASS'),
+(7,  1,  'LIKE'),
+(1,  7,  'PASS'),
+(10, 3,  'SUPER_LIKE'),
+(3,  10, 'PASS');
 
 -- Matches
 INSERT INTO Matches (user1Id, user2Id) VALUES
