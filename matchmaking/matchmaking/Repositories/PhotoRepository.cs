@@ -20,13 +20,17 @@ namespace matchmaking.Repositories
             int id = (int)reader["photoId"];
             int userId = (int)reader["userId"];
             string location = (string)reader["location"];
+            int profileOrderIndex = (int)reader["profileOrderIndex"];
 
-            return new Photo(id, userId, location);
+            return new Photo(id, userId, location, profileOrderIndex);
         }
 
         public List<Photo> GetAll()
         {
-            const string query = @"SELECT photoId, userId, [location] FROM Photos";
+            const string query = @"
+                SELECT photoId, userId, [location], profileOrderIndex 
+                FROM Photos 
+                ORDER BY userId, profileOrderIndex ASC";
 
             List<Photo> photos = new List<Photo>();
 
@@ -46,13 +50,16 @@ namespace matchmaking.Repositories
 
         public void Add(Photo photo)
         {
-            const string query = @"INSERT INTO Photos (userId, [location]) VALUES (@userId, @location)";
+            const string query = @"
+                INSERT INTO Photos (userId, [location], profileOrderIndex) 
+                VALUES (@userId, @location, @profileOrderIndex)";
 
             using SqlConnection connection = new SqlConnection(_connectionString);
             using SqlCommand command = new SqlCommand(query, connection);
 
             command.Parameters.AddWithValue("@userId", photo.UserId);
             command.Parameters.AddWithValue("@location", photo.Location);
+            command.Parameters.AddWithValue("@profileOrderIndex", photo.ProfileOrderIndex);
 
             connection.Open();
             command.ExecuteNonQuery();
@@ -62,7 +69,7 @@ namespace matchmaking.Repositories
         {
             const string query = @"
                 DELETE FROM Photos 
-                OUTPUT DELETED.photoId, DELETED.userId, DELETED.[location]
+                OUTPUT DELETED.photoId, DELETED.userId, DELETED.[location], DELETED.profileOrderIndex
                 WHERE photoId = @photoId;";
 
             using SqlConnection connection = new SqlConnection(_connectionString);
@@ -84,7 +91,10 @@ namespace matchmaking.Repositories
 
         public Photo? FindById(int photoId)
         {
-            const string query = @"SELECT photoId, userId, [location] FROM Photos WHERE photoId = @photoId";
+            const string query = @"
+                SELECT photoId, userId, [location], profileOrderIndex 
+                FROM Photos 
+                WHERE photoId = @photoId";
 
             using SqlConnection connection = new SqlConnection(_connectionString);
             using SqlCommand command = new SqlCommand(query, connection);
@@ -102,52 +112,22 @@ namespace matchmaking.Repositories
             return null;
         }
 
-        public List<Photo> GetByUserId(int userId)
-        {
-            const string query = @"SELECT photoId, userId, [location] FROM Photos WHERE userId = @userId";
-
-            List<Photo> photos = new List<Photo>();
-
-            using SqlConnection connection = new SqlConnection(_connectionString);
-            using SqlCommand command = new SqlCommand(query, connection);
-
-            command.Parameters.AddWithValue("@userId", userId);
-
-            connection.Open();
-            using SqlDataReader reader = command.ExecuteReader();
-
-            while (reader.Read())
-            {
-                photos.Add(MapPhoto(reader));
-            }
-
-            return photos;
-        }
-
-        public List<Photo> DeleteByUserId(int userId)
+        public void Update(Photo photo)
         {
             const string query = @"
-                DELETE FROM Photos 
-                OUTPUT DELETED.photoId, DELETED.userId, DELETED.[location]
-                WHERE userId = @userId;";
-
-            List<Photo> deletedPhotos = new List<Photo>();
+                UPDATE Photos
+                SET [location] = @location, profileOrderIndex = @profileOrderIndex
+                WHERE photoId = @photoId";
 
             using SqlConnection connection = new SqlConnection(_connectionString);
             using SqlCommand command = new SqlCommand(query, connection);
 
-            command.Parameters.AddWithValue("@userId", userId);
+            command.Parameters.AddWithValue("@location", photo.Location);
+            command.Parameters.AddWithValue("@profileOrderIndex", photo.ProfileOrderIndex);
+            command.Parameters.AddWithValue("@photoId", photo.PhotoId);
 
             connection.Open();
-
-            using SqlDataReader reader = command.ExecuteReader();
-
-            while (reader.Read())
-            {
-                deletedPhotos.Add(MapPhoto(reader));
-            }
-
-            return deletedPhotos;
+            command.ExecuteNonQuery();
         }
     }
 }
