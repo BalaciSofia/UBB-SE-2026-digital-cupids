@@ -11,7 +11,6 @@ namespace matchmaking.Domain
         public int PhotoId { get; set; }
         public int UserId { get; set; }
         public string? Location { get; set; }
-
         public int ProfileOrderIndex { get; set; }
 
         public Photo() { }
