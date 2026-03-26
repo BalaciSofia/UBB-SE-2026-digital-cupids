@@ -156,7 +156,7 @@ INSERT INTO ProfilePreferences (userId, gender) VALUES
 (10, 'NON_BINARY');
 
 -- Photos
-INSERT INTO Photos (userId, location) VALUES
+INSERT INTO Photos (userId, location, profileOrderIndex) VALUES
 (1,  'https://cdn.matchmaking.app/photos/user1_photo1.jpg', 1),
 (1,  'https://cdn.matchmaking.app/photos/user1_photo2.jpg', 2),
 (2,  'https://cdn.matchmaking.app/photos/user2_photo1.jpg', 1),
