@@ -3,33 +3,36 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Windows.ApplicationModel;
 
 namespace matchmaking.Utils
 {
     internal class LocationUtil
     {
-        private String locationsFile;
+        private String locationsFile="locations.csv";
         private Dictionary<String, Tuple<float, float>> locations = new Dictionary<string, Tuple<float, float>>();
 
         public LocationUtil()
         {
-            string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            locationsFile = Path.Combine(baseDirectory, "locations.csv");
+            string root = Package.Current.InstalledLocation.Path;
+            string fullPath = Path.Combine(root, "locations.csv");
+            System.Diagnostics.Debug.WriteLine("Looking for file at: " + fullPath);
 
-            if (File.Exists(locationsFile))
+            if (File.Exists(fullPath))
             {
-                foreach ( var line in File.ReadLines(locationsFile))
+                foreach (var line in File.ReadLines(fullPath).Skip(1)) 
                 {
                     var parts = line.Split(',');
                     string county = parts[0];
-                    float lat=float.Parse(parts[1]);
-                    float lon=float.Parse(parts[2]);
-                    locations[county]=new Tuple<float, float>(lat, lon);
-                }                
+                    float lat = float.Parse(parts[1], System.Globalization.CultureInfo.InvariantCulture);
+                    float lon = float.Parse(parts[2], System.Globalization.CultureInfo.InvariantCulture);
+                    locations[county] = new Tuple<float, float>(lat, lon);
+                }
             }
             else
             {
-                throw new FileNotFoundException("The file doesn't exist");
+                System.Diagnostics.Debug.WriteLine("File NOT found at: " + fullPath);
+                throw new FileNotFoundException("The file doesn't exist", fullPath);
             }
         }
 
