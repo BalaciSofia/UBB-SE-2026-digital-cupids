@@ -10,7 +10,7 @@ namespace matchmaking.ViewModels
 {
     internal class EditProfileViewModel : INotifyPropertyChanged
     {
-        private readonly int _userId;
+        public int _userId { get;  }
         private readonly ProfileService _profileService;
         private readonly PhotoService _photoService;
         private readonly QuestionaireUtil _questionaireUtil;
@@ -35,15 +35,13 @@ namespace matchmaking.ViewModels
         private List<Gender> _preferredGenders = new();
         private List<Photo> _photos = new();
         private List<string> _interests = new();
+
         private string _errorMessage = string.Empty;
         private string _statusMessage = string.Empty;
-        private bool _isSaveConfirmVisible;
-        private bool _isDeleteConfirmVisible;
 
 
         private List<string> _shuffledQuestions = new();
         private List<int> _answers = new();
-
 
         public string Bio
         {
@@ -86,7 +84,37 @@ namespace matchmaking.ViewModels
             get => _gender;
             set { if (_gender != value) { _gender = value; OnPropertyChanged(nameof(Gender)); } }
         }
+        public List<string> GenderOptions { get; } = new List<string>{"Male", "Female", "Non-Binary", "Other"};
 
+
+        //-----------------------------------------------------
+        public string SelectedGender
+        {
+            get => _gender switch
+            {
+                Gender.MALE => "Male",
+                Gender.FEMALE => "Female",
+                Gender.NON_BINARY => "Non-Binary",
+                Gender.OTHER => "Other",
+                _ => "Male"
+            };
+            set
+            {
+                Gender newGender = value switch
+                {
+                    "Female" => Gender.FEMALE,
+                    "Non-Binary" => Gender.NON_BINARY,
+                    "Other" => Gender.OTHER,
+                    _ => Gender.MALE
+                };
+                if (_gender != newGender)
+                {
+                    _gender = newGender;
+                    OnPropertyChanged(nameof(Gender));
+                    OnPropertyChanged(nameof(SelectedGender));
+                }
+            }
+        }
         public bool DisplayStarSign
         {
             get => _displayStarSign;
@@ -96,8 +124,18 @@ namespace matchmaking.ViewModels
         public bool IsArchived
         {
             get => _isArchived;
-            set { if (_isArchived != value) { _isArchived = value; OnPropertyChanged(nameof(IsArchived)); } }
+            set 
+            { 
+                if (_isArchived != value) 
+                { 
+                    _isArchived = value; 
+                    OnPropertyChanged(nameof(IsArchived)); 
+                    OnPropertyChanged(nameof(IsNotArchived)); 
+                } 
+            }
         }
+
+        public bool IsNotArchived => !IsArchived;
 
         public List<Gender> PreferredGenders
         {
@@ -129,18 +167,6 @@ namespace matchmaking.ViewModels
         {
             get => _statusMessage;
             private set { if (_statusMessage != value) { _statusMessage = value; OnPropertyChanged(nameof(StatusMessage)); } }
-        }
-
-        public bool IsSaveConfirmVisible
-        {
-            get => _isSaveConfirmVisible;
-            private set { if (_isSaveConfirmVisible != value) { _isSaveConfirmVisible = value; OnPropertyChanged(nameof(IsSaveConfirmVisible)); } }
-        }
-
-        public bool IsDeleteConfirmVisible
-        {
-            get => _isDeleteConfirmVisible;
-            private set { if (_isDeleteConfirmVisible != value) { _isDeleteConfirmVisible = value; OnPropertyChanged(nameof(IsDeleteConfirmVisible)); } }
         }
 
         public string LoverTypeResultText => LoverType switch
@@ -217,19 +243,8 @@ namespace matchmaking.ViewModels
             StatusMessage = string.Empty;
         }
 
-        public void RequestSaveChanges()
-        {
-            IsSaveConfirmVisible = true;
-        }
-
-        public void CancelSaveChanges()
-        {
-            IsSaveConfirmVisible = false;
-        }
-
         public void ConfirmSaveChanges()
         {
-            IsSaveConfirmVisible = false;
             try
             {
                 _profileService.UpdateProfile(_userId, BuildProfileData());
@@ -259,19 +274,8 @@ namespace matchmaking.ViewModels
             StatusMessage = "Profile restored.";
         }
 
-        public void RequestDeleteProfile()
-        {
-            IsDeleteConfirmVisible = true;
-        }
-
-        public void CancelDeleteProfile()
-        {
-            IsDeleteConfirmVisible = false;
-        }
-
         public void ConfirmDeleteProfile()
         {
-            IsDeleteConfirmVisible = false;
             DatingProfile profile = _profileService.GetProfileById(_userId);
             _profileService.DeleteProfile(profile);
         }
@@ -364,6 +368,7 @@ namespace matchmaking.ViewModels
             }
         }
 
+        //----------------------------------------------------------------
         public void PrepareQuestionnaire()
         {
             ShuffledQuestions = _questionaireUtil.GetQuestions();

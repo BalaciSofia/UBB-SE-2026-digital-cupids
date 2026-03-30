@@ -16,6 +16,7 @@
   <ItemGroup>
     <None Remove="appsettings.Development.json" />
     <None Remove="locations.csv" />
+    <None Remove="Views\EditProfileView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -52,7 +53,14 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260317003" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Views\" />
+    <None Update="interests.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\EditProfileView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <!--
