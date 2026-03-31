@@ -37,13 +37,14 @@ namespace matchmaking.Views
             timer.Start();
         }
 
+
         private void NavigateTo(Screen screen)
         {
             switch (screen)
             {
-                //case Screen.AGE_BLOCK:
-                //    Frame.Navigate(typeof(AgeBlockView), ViewModel);
-                //    break;
+                case Screen.AGE_BLOCK:
+                    Frame.Navigate(typeof(AgeBlockView), ViewModel);
+                    break;
                 //case Screen.ADMIN:
                 //    Frame.Navigate(typeof(AdminView));
                 //    break;
