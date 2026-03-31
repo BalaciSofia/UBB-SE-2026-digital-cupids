@@ -122,6 +122,7 @@ namespace matchmaking.Services
                 {
                     profile.IsHotSeat = false;
                     ProfileRepo.Update(profile);
+                    
                 }
             }
         }
@@ -132,6 +133,23 @@ namespace matchmaking.Services
                 .Where(p => UserUtil.GetUserData(p.UserId).Username
                     .Contains(name, StringComparison.OrdinalIgnoreCase))
                 .ToList();
+        }
+
+        public List<DatingProfile> GetAllProfiles()
+        {
+            return ProfileRepo.GetAll();
+        }
+
+        public void UpdateBoost(int userId)
+        {
+            DatingProfile? profile = ProfileRepo.FindById(userId);
+            if (profile == null)
+            {
+                throw new Exception("Profile not found.");
+            }
+            profile.IsBoosted = true;
+            profile.BoostDay = DateTime.Today.Day;
+            ProfileRepo.Update(profile);
         }
 
     }
