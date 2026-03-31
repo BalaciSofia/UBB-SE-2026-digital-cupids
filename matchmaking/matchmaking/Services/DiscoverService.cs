@@ -47,6 +47,7 @@ namespace matchmaking.Services
                 )
                 .ToList();
 
+            //TODO: Check if it still remains as the first show profile!!!!
             List<DatingProfile> result = new List<DatingProfile>();
             DatingProfile? hotSeatProfile = candidates.FirstOrDefault(p => p.IsHotSeat);
             if (hotSeatProfile != null)

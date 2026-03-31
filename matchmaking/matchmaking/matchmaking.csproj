@@ -52,7 +52,9 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260317003" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Views\" />
+    <Page Update="Views\HotSeatView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <!--
