@@ -17,6 +17,7 @@
     <None Remove="appsettings.Development.json" />
     <None Remove="locations.csv" />
     <None Remove="Views\EditProfileView.xaml" />
+    <None Remove="Views\QuestionnaireView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -56,6 +57,9 @@
     <None Update="interests.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\QuestionnaireView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\EditProfileView.xaml">

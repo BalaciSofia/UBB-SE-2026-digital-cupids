@@ -39,6 +39,7 @@ namespace matchmaking.Views
             RenderPreferredGenders();
             UpdateInterestsHeader();
             UpdateArchivedBanner();
+            UpdateQuestionnaireButton(); 
         }
 
         private void RenderPhotos()
@@ -248,13 +249,13 @@ namespace matchmaking.Views
             dialog.Content = "Are you sure you want to save your changes?";
             dialog.PrimaryButtonText = "Save";
             dialog.CloseButtonText = "Cancel";
-            dialog.XamlRoot = this.XamlRoot; // required in WinUI 3
+            dialog.XamlRoot = this.XamlRoot;
 
             ContentDialogResult result = await dialog.ShowAsync();
 
             if (result == ContentDialogResult.Primary)
             {
-                ViewModel.ConfirmSaveChanges();
+                ViewModel.SaveChanges();
             }
         }
 
@@ -282,7 +283,7 @@ namespace matchmaking.Views
 
             if (result == ContentDialogResult.Primary)
             {
-                ViewModel.ConfirmDeleteProfile();
+                ViewModel.DeleteProfile();
             }
         }
 
@@ -293,5 +294,16 @@ namespace matchmaking.Views
                 : Visibility.Collapsed;
         }
 
+        private void QuestionnaireButton_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel!.PrepareQuestionnaire();
+            Frame.Navigate(typeof(QuestionnaireView), ViewModel);
+        }
+        private void UpdateQuestionnaireButton()
+        {
+            QuestionnaireButton.Visibility = ViewModel.HasLoverType
+                ? Visibility.Collapsed
+                : Visibility.Visible;
+        }
     }
 }

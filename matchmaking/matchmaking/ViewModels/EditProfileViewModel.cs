@@ -37,8 +37,6 @@ namespace matchmaking.ViewModels
         private List<string> _interests = new();
 
         private string _errorMessage = string.Empty;
-        private string _statusMessage = string.Empty;
-
 
         private List<string> _shuffledQuestions = new();
         private List<int> _answers = new();
@@ -87,7 +85,6 @@ namespace matchmaking.ViewModels
         public List<string> GenderOptions { get; } = new List<string>{"Male", "Female", "Non-Binary", "Other"};
 
 
-        //-----------------------------------------------------
         public string SelectedGender
         {
             get => _gender switch
@@ -163,11 +160,9 @@ namespace matchmaking.ViewModels
             private set { if (_errorMessage != value) { _errorMessage = value; OnPropertyChanged(nameof(ErrorMessage)); } }
         }
 
-        public string StatusMessage
-        {
-            get => _statusMessage;
-            private set { if (_statusMessage != value) { _statusMessage = value; OnPropertyChanged(nameof(StatusMessage)); } }
-        }
+
+        public bool HasLoverType => LoverType != null;
+
 
         public string LoverTypeResultText => LoverType switch
         {
@@ -240,21 +235,18 @@ namespace matchmaking.ViewModels
             DatingProfile profile = _profileService.GetProfileById(_userId);
             PopulateFromProfile(profile);
             ErrorMessage = string.Empty;
-            StatusMessage = string.Empty;
         }
 
-        public void ConfirmSaveChanges()
+        public void SaveChanges()
         {
             try
             {
                 _profileService.UpdateProfile(_userId, BuildProfileData());
-                StatusMessage = "Profile saved successfully.";
                 ErrorMessage = string.Empty;
             }
             catch (Exception ex)
             {
                 ErrorMessage = ex.Message;
-                StatusMessage = string.Empty;
             }
         }
 
@@ -263,7 +255,6 @@ namespace matchmaking.ViewModels
             DatingProfile profile = _profileService.GetProfileById(_userId);
             _profileService.ArchiveProfile(profile);
             IsArchived = true;
-            StatusMessage = "Profile archived.";
         }
 
         public void UnarchiveProfile()
@@ -271,10 +262,9 @@ namespace matchmaking.ViewModels
             DatingProfile profile = _profileService.GetProfileById(_userId);
             _profileService.UnarchiveProfile(profile);
             IsArchived = false;
-            StatusMessage = "Profile restored.";
         }
 
-        public void ConfirmDeleteProfile()
+        public void DeleteProfile()
         {
             DatingProfile profile = _profileService.GetProfileById(_userId);
             _profileService.DeleteProfile(profile);
@@ -368,7 +358,6 @@ namespace matchmaking.ViewModels
             }
         }
 
-        //----------------------------------------------------------------
         public void PrepareQuestionnaire()
         {
             ShuffledQuestions = _questionaireUtil.GetQuestions();
@@ -415,6 +404,7 @@ namespace matchmaking.ViewModels
 
             OnPropertyChanged(nameof(LoverType));
             OnPropertyChanged(nameof(LoverTypeResultText));
+            OnPropertyChanged(nameof(HasLoverType));
         }
 
         private void OnPropertyChanged(string propertyName)

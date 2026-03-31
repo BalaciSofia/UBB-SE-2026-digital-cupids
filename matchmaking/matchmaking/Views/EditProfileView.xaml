@@ -181,6 +181,7 @@ Padding="32" Margin="40,16,40,0">
                     <StackPanel Spacing="8">
                         <TextBlock Text="Personality Type" FontSize="13" Foreground="Gray"/>
                         <TextBlock Text="{Binding LoverTypeResultText}" FontSize="15"/>
+                        <Button Name="QuestionnaireButton" Content="Take Personality Questionnaire" Click="QuestionnaireButton_Click"/>
                   
                     </StackPanel>
 
