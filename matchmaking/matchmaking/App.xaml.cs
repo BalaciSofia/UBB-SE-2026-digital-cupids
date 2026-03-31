@@ -2,6 +2,7 @@
 using matchmaking.Repositories;
 using matchmaking.Views;
 using matchmaking.ViewModels;
+using matchmaking.Utils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.UI.Xaml;
@@ -39,6 +40,10 @@ namespace matchmaking
 
         public static string ConnectionString { get; private set; }
 
+        public static string Email { get; private set; }
+
+        public static string Password { get; private set; }
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -52,14 +57,18 @@ namespace matchmaking
             //{
             //    "ConnectionStrings": {
             //        "DefaultConnection": "[connection string]"
+            //    },
+            //    "Email": {
+            //        "Address": "[email address]",
+            //        "Password": "[email password]"
             //    }
             //}
 
             // apoi, click dreapta pe appsettings.Development.json, Properties, si setati "Copy to Output Directory" la "Copy if newer"
 
             ConnectionString = config.GetConnectionString("DefaultConnection") ?? string.Empty;
-
-            Debug.WriteLine($"Connection string loaded: {ConnectionString}");
+            Email = config["Email:Address"] ?? string.Empty;
+            Password = config["Email:Password"] ?? string.Empty;
 
             InitializeComponent();
         }
