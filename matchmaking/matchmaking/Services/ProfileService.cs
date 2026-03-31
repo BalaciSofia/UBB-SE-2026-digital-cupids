@@ -130,8 +130,7 @@ namespace matchmaking.Services
         {
             List<DatingProfile> allProfiles = ProfileRepo.GetAll();
             return allProfiles
-                .Where(p => UserUtil.GetUserData(p.UserId).Username
-                    .Contains(name, StringComparison.OrdinalIgnoreCase))
+                .Where(p => p.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
                 .ToList();
         }
 

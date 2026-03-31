@@ -91,7 +91,7 @@ namespace matchmaking.Repositories
 
         public SupportTicket FindByEmail(string email)
         {
-            const string query = @"SELECT email FROM SupportTicket WHERE email = @email;";
+            const string query = @"SELECT email, partnerName, certificateUrl, partnerPhotoUrl, isResolved FROM SupportTicket WHERE email = @email;";
 
             using SqlConnection connection = new SqlConnection(_connectionString);
             using SqlCommand command = new SqlCommand(query, connection);

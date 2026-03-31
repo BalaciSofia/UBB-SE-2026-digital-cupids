@@ -15,6 +15,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="locations.csv" />
+    <None Remove="Views\AdminView.xaml" />
     <None Remove="Views\EditProfileView.xaml" />
     <None Remove="Views\QuestionnaireView.xaml" />
     <None Remove="Views\SpouseCheckerView.xaml" />
@@ -66,6 +67,9 @@
     <None Update="interests.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\AdminView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\SpouseCheckerView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
