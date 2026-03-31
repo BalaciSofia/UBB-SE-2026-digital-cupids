@@ -1,34 +1,31 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
+using System.Linq;
 using matchmaking.Services;
 using matchmaking.Utils;
 using matchmaking.Domain;
-
 
 namespace matchmaking.ViewModels
 {
     internal class CreateProfileViewModel : INotifyPropertyChanged
     {
         private readonly ProfileService _profileService;
-        private readonly PhotoService _photoService;
         private readonly MockUserUtil _userUtil;
 
         private int _currentStep;
-        private ProfileData _profileData;
+        private ProfileData? _profileData;
         private bool _termsAccepted;
         private int _currentPhotoIndex;
         private int _userId;
-        private string _username;
+        private string _username = string.Empty;
         private DateTime _birthDate;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public CreateProfileViewModel(int userId, ProfileService profileService, PhotoService photoService, MockUserUtil userUtil)
+        public CreateProfileViewModel(int userId, ProfileService profileService, MockUserUtil userUtil)
         {
             _profileService = profileService;
-            _photoService = photoService;
             _userUtil = userUtil;
 
             _currentStep = 1;
@@ -40,7 +37,7 @@ namespace matchmaking.ViewModels
 
         public int CurrentStep
         {
-            get { return _currentStep; }
+            get => _currentStep;
             private set
             {
                 if (_currentStep != value)
@@ -53,7 +50,7 @@ namespace matchmaking.ViewModels
 
         public ProfileData? ProfileData
         {
-            get { return _profileData; }
+            get => _profileData;
             private set
             {
                 if (_profileData != value)
@@ -66,7 +63,7 @@ namespace matchmaking.ViewModels
 
         public bool TermsAccepted
         {
-            get { return _termsAccepted; }
+            get => _termsAccepted;
             set
             {
                 if (_termsAccepted != value)
@@ -79,7 +76,7 @@ namespace matchmaking.ViewModels
 
         public int CurrentPhotoIndex
         {
-            get { return _currentPhotoIndex; }
+            get => _currentPhotoIndex;
             private set
             {
                 if (_currentPhotoIndex != value)
@@ -92,7 +89,7 @@ namespace matchmaking.ViewModels
 
         public int UserId
         {
-            get { return _userId; }
+            get => _userId;
             private set
             {
                 if (_userId != value)
@@ -145,44 +142,53 @@ namespace matchmaking.ViewModels
 
         public void AddPhoto(Photo photo)
         {
-            _photoService.AddPhoto(photo);
+            if (_profileData.Photos.Count >= 6)
+            {
+                throw new InvalidOperationException("You cannot upload more than 6 photos!");
+            }
+            photo.ProfileOrderIndex = _profileData.Photos.Count;
+            _profileData.Photos.Add(photo);
             OnPropertyChanged(nameof(ProfileData));
         }
 
         public void RemovePhoto(int photoId)
         {
-            _photoService.DeleteById(photoId);
+            if (_profileData.Photos.Count <= 2)
+            {
+                throw new InvalidOperationException("You must have at least 2 photos!");
+            }
+            var photo = _profileData.Photos.FirstOrDefault(p => p.PhotoId == photoId);
+            if (photo != null)
+            {
+                _profileData.Photos.Remove(photo);
+            }
+            for (int i = 0; i < _profileData.Photos.Count; i++)
+            {
+                _profileData.Photos[i].ProfileOrderIndex = i;
+            }
             OnPropertyChanged(nameof(ProfileData));
         }
 
         public void AddInterest(string interest)
         {
-            if (_profileData.Interests.Count == 15)
+            if (_profileData.Interests.Count >= 15)
             {
                 throw new InvalidOperationException("You can't have more than 15 interests!");
             }
-
             if (_profileData.Interests.Contains(interest))
             {
                 throw new InvalidOperationException("You can't add the same interest twice!");
             }
-
             _profileData.Interests.Add(interest);
             OnPropertyChanged(nameof(ProfileData));
         }
 
         public void RemoveInterest(string interest)
         {
-            if (_profileData.Interests.Count == 3)
-            {
-                throw new InvalidOperationException("You can't have less than 3 interests!");
-            }
-
             if (!_profileData.Interests.Contains(interest))
             {
-                throw new InvalidOperationException("This interest doesn't exist in your list of interests!");
+                throw new InvalidOperationException("This interest doesn't exist in your list!");
             }
-
             _profileData.Interests.Remove(interest);
             OnPropertyChanged(nameof(ProfileData));
         }
@@ -194,7 +200,6 @@ namespace matchmaking.ViewModels
             {
                 age--;
             }
-                
 
             return new DatingProfile(
                 _username,
@@ -222,29 +227,16 @@ namespace matchmaking.ViewModels
 
         public void NextPhoto()
         {
-            if (_profileData.Photos.Count == 0)
-            {
-                return;
-            }
-
+            if (_profileData.Photos.Count == 0) return;
             CurrentPhotoIndex = (_currentPhotoIndex + 1) % _profileData.Photos.Count;
         }
 
         public void PreviousPhoto()
         {
-            if (_profileData.Photos.Count == 0)
-            {
-                return;
-            }
-
-            if (_currentPhotoIndex == 0)
-            {
-                CurrentPhotoIndex = _profileData.Photos.Count - 1;
-            }
-            else
-            {
-                CurrentPhotoIndex = _currentPhotoIndex - 1;
-            }
+            if (_profileData.Photos.Count == 0) return;
+            CurrentPhotoIndex = _currentPhotoIndex == 0
+                ? _profileData.Photos.Count - 1
+                : _currentPhotoIndex - 1;
         }
 
         public DatingProfile CreateDatingProfile()
@@ -260,7 +252,5 @@ namespace matchmaking.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-
     }
 }
