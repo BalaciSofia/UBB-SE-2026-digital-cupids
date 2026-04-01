@@ -8,8 +8,6 @@ BEGIN
 END;
 GO
 
-USE matchmaking_db;
-
 DROP TABLE IF EXISTS Interactions
 DROP TABLE IF EXISTS Matches
 DROP TABLE IF EXISTS ProfilePreferences
@@ -117,16 +115,16 @@ GO
 INSERT INTO Profiles 
 ([name], gender, location, nationality, maxDistance, age, minPrefAge, maxPrefAge, bio, displayStarSign, isArchived, dateOfBirth, loverType, isHotSeat, boost, boostDay, hotSeatDay)
 VALUES
-('Andrei Popescu',   'MALE',       'Cluj-Napoca',  'Romanian',  100, 28, 22, 35, 'Software engineer who loves hiking and coffee.',         1, NULL, '1996-03-15', 'DEEP_THINKER',          NULL, NULL, NULL, NULL),
-('Maria Ionescu',    'FEMALE',     'Bucuresti',    'Romanian',   50, 25, 23, 32, 'Artist and yoga instructor. Dog mom.',                   0, NULL, '1999-07-22', 'SOCIAL_EXPLORER',        NULL, NULL, NULL, NULL),
-('Alex Dumitrescu',  'MALE',       'Timisoara',    'Romanian',  200, 31, 25, 38, 'Finance guy by day, amateur chef by night.',             1, NULL, '1993-11-05', 'STABILITY_LOVER',        NULL, NULL, NULL, NULL),
-('Elena Marinescu',  'FEMALE',     'Iasi',         'Romanian',   75, 27, 25, 34, 'Journalist. Lover of wine, books, and bad puns.',        1, NULL, '1997-04-18', 'EMPATHETIC_CONNECTOR',   NULL, NULL, NULL, NULL),
-('Radu Stan',        'MALE',       'Brasov',       'Romanian',  300, 33, 27, 40, 'Architect with a passion for travel and photography.',   0, NULL, '1991-09-30', 'ADVENTURE_SEEKER',       NULL, NULL, NULL, NULL),
-('Ioana Petrescu',   'FEMALE',     'Constanta',    'Romanian',  150, 29, 24, 36, 'Marine biology student. Swims every weekend.',           1, NULL, '1995-12-11', 'ADVENTURE_SEEKER',       NULL, NULL, NULL, NULL),
-('Sam Luca',         'NON_BINARY', 'Sibiu',        'Romanian',  500, 26, 22, 33, 'Music producer. Coffee shop regular.',                   0, NULL, '1998-02-28', 'SOCIAL_EXPLORER',        NULL, NULL, NULL, NULL),
-('Ana Pop',          'FEMALE',     'Oradea',       'Romanian',   80, 30, 26, 37, 'UX designer who loves art and hiking.',                  1,    1, '1994-06-03', 'DEEP_THINKER',           NULL, NULL, NULL, NULL),
-('Mihai Georgescu',  'MALE',       'Craiova',      'Romanian',  250, 35, 28, 42, 'Chef and football fan. Looking for something real.',     0, NULL, '1989-08-19', 'STABILITY_LOVER',        NULL, NULL, NULL, NULL),
-('Alex Morgan',      'OTHER',      'Cluj-Napoca',  'Romanian',   60, 24, 18, 30, 'PhD student in literature. Pasta enthusiast.',           1, NULL, '2000-01-07', NULL,                     NULL, NULL, NULL, NULL);
+('Andrei Popescu',   'MALE',       'Cluj',  'Romanian',  100, 28, 22, 35, 'Software engineer who loves hiking and coffee.',         1, 0, '1996-03-15', 'DEEP_THINKER',          NULL, NULL, NULL, NULL),
+('Maria Ionescu',    'FEMALE',     'Bucuresti',    'Romanian',   50, 25, 23, 32, 'Artist and yoga instructor. Dog mom.',                   0, 0, '1999-07-22', 'SOCIAL_EXPLORER',        NULL, NULL, NULL, NULL),
+('Alex Dumitrescu',  'MALE',       'Timis',    'Romanian',  200, 31, 25, 38, 'Finance guy by day, amateur chef by night.',             1, 0, '1993-11-05', 'STABILITY_LOVER',        NULL, NULL, NULL, NULL),
+('Elena Marinescu',  'FEMALE',     'Iasi',         'Romanian',   75, 27, 25, 34, 'Journalist. Lover of wine, books, and bad puns.',        1, 0, '1997-04-18', 'EMPATHETIC_CONNECTOR',   NULL, NULL, NULL, NULL),
+('Radu Stan',        'MALE',       'Brasov',       'Romanian',  300, 33, 27, 40, 'Architect with a passion for travel and photography.',   0, 0, '1991-09-30', 'ADVENTURE_SEEKER',       NULL, NULL, NULL, NULL),
+('Ioana Petrescu',   'FEMALE',     'Constanta',    'Romanian',  150, 29, 24, 36, 'Marine biology student. Swims every weekend.',           1, 0, '1995-12-11', 'ADVENTURE_SEEKER',       NULL, NULL, NULL, NULL),
+('Sam Luca',         'NON_BINARY', 'Sibiu',        'Romanian',  500, 26, 22, 33, 'Music producer. Coffee shop regular.',                   0, 0, '1998-02-28', 'SOCIAL_EXPLORER',        NULL, NULL, NULL, NULL),
+('Ana Pop',          'FEMALE',     'Bihor',       'Romanian',   80, 30, 26, 37, 'UX designer who loves art and hiking.',                  1, 1, '1994-06-03', 'DEEP_THINKER',           NULL, NULL, NULL, NULL),
+('Mihai Georgescu',  'MALE',       'Dolj',      'Romanian',  250, 35, 28, 42, 'Chef and football fan. Looking for something real.',     0, 0, '1989-08-19', 'STABILITY_LOVER',        NULL, NULL, NULL, NULL),
+('Alex Morgan',      'OTHER',      'Cluj',  'Romanian',   60, 24, 18, 30, 'PhD student in literature. Pasta enthusiast.',           1, 0, '2000-01-07', NULL,                     NULL, NULL, NULL, NULL);
 
 -- ProfileInterests
 INSERT INTO ProfileInterests (userId, interest) VALUES

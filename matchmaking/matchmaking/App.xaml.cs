@@ -82,6 +82,7 @@ namespace matchmaking
         {
             _window = new MainWindow();
             MainWindow = _window;
+            _window.Activate();
         }
     }
 }
