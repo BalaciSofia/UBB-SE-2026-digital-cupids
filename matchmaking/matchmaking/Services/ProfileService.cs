@@ -1,16 +1,10 @@
 ﻿using matchmaking.Domain;
 using matchmaking.Repositories;
 using matchmaking.Utils;
-using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
+using System.IO;
 using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Media.Capture;
-using Windows.System;
 
 namespace matchmaking.Services
 {
@@ -31,12 +25,44 @@ namespace matchmaking.Services
             return age;
         }
 
+        private void CopyPhotosToStorage(List<Photo> photos)
+        {
+            var allowedExtensions = new[] { ".jpeg", ".jpg", ".png" };
+            const long maxFileSize = 10 * 1024 * 1024;
+            string storageDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "StoredPhotos");
+            Directory.CreateDirectory(storageDirectory);
+
+            for (int i = 0; i < photos.Count; i++)
+            {
+                string extension = Path.GetExtension(photos[i].Location).ToLower();
+                if (!allowedExtensions.Contains(extension))
+                {
+                    throw new Exception("Only JPEG and PNG files are allowed!");
+                }
+
+                long fileSize = new FileInfo(photos[i].Location).Length;
+                if (fileSize > maxFileSize)
+                {
+                    throw new Exception("The file is too large! Maximum size is 10MB.");
+                }
+
+                string fileName = Guid.NewGuid().ToString() + extension;
+                string destinationPath = Path.Combine(storageDirectory, fileName);
+                File.Copy(photos[i].Location, destinationPath);
+                photos[i].Location = destinationPath;
+                photos[i].ProfileOrderIndex = i;
+            }
+        }
+
 
 
         public DatingProfile CreateProfile(int Id,ProfileData profileData)
         {
             UserData userData = UserUtil.GetUserData(Id);
             int age = CalculateAge(userData.Birthdate);
+
+            CopyPhotosToStorage(profileData.Photos);
+
             DatingProfile newProfile = new DatingProfile(
                 userData.Username,
                 profileData.Gender,
