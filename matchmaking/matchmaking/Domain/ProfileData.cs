@@ -9,6 +9,7 @@ namespace matchmaking.Domain
 {
     internal class ProfileData
     {
+        public string Name { get; set; }
         public Gender Gender { get; set; }
         public List<Gender> PreferredGenders { get; set; }
         public string Location { get; set; }
@@ -23,8 +24,9 @@ namespace matchmaking.Domain
         public List<String> Interests { get; set; }
         public LoverType? LoverType { get; set; }
 
-        public ProfileData(Gender gender, List<Gender> preferredGenders, string location,string nationality, int maxDistance, int minPreferredAge, int maxPreferredAge, string bio, bool displayStarSign, List<Photo> photos, List<string> interests, LoverType? loverType)
+        public ProfileData(string name,Gender gender, List<Gender> preferredGenders, string location,string nationality, int maxDistance, int minPreferredAge, int maxPreferredAge, string bio, bool displayStarSign, List<Photo> photos, List<string> interests, LoverType? loverType)
         {
+            Name= name;
             Gender = gender;
             PreferredGenders = preferredGenders;
             Location = location;

@@ -94,6 +94,8 @@ namespace matchmaking.Services
         {
             DatingProfile existingProfile = ProfileRepo.FindById(id);
 
+            existingProfile.Name = profileData.Name;
+            existingProfile.Nationality = profileData.Nationality;
             existingProfile.Gender = profileData.Gender;
             existingProfile.PreferredGenders = profileData.PreferredGenders;
             existingProfile.Location = profileData.Location;

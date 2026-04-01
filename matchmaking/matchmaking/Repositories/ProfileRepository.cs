@@ -269,7 +269,7 @@ namespace matchmaking.Repositories
 
             const string query = @"
                 UPDATE Profiles
-                SET gender = @gender, location = @location, nationality = @nationality,
+                SET [name] = @name, gender = @gender, location = @location, nationality = @nationality,
                     maxDistance = @maxDistance, age = @age, minPrefAge = @minPrefAge,
                     maxPrefAge = @maxPrefAge, bio = @bio, displayStarSign = @displayStarSign,
                     isArchived = @isArchived, dateOfBirth = @dateOfBirth, loverType = @loverType,
@@ -281,6 +281,7 @@ namespace matchmaking.Repositories
 
             using SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@userId", profile.UserId);
+            command.Parameters.AddWithValue("@name", profile.Name);
             command.Parameters.AddWithValue("@gender", profile.Gender.ToString());
             command.Parameters.AddWithValue("@location", profile.Location);
             command.Parameters.AddWithValue("@nationality", profile.Nationality);

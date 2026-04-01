@@ -355,6 +355,7 @@ namespace matchmaking.Views
             }
         }
 
+
         private void BioBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             UpdateBioHeader();
@@ -445,6 +446,26 @@ namespace matchmaking.Views
             if (result == ContentDialogResult.Primary)
             {
                 ViewModel.DeleteProfileCommand.Execute(null);
+
+                Window window = (Application.Current as App)!._window!;
+                if (window.Content is Grid grid && grid.Children.Count > 0 && grid.Children[0] is Frame rootFrame)
+                {
+                    var profileRepo = new Repositories.ProfileRepository(App.ConnectionString);
+                    var adminRepo = new Repositories.DatingAdminRepository(App.ConnectionString);
+                    var mockUserUtil = new Utils.MockUserUtil();
+
+                    var profileService = new Services.ProfileService(profileRepo, mockUserUtil);
+                    var adminService = new Services.DatingAdminService(adminRepo);
+
+                    var splashViewModel = new ViewModels.SplashViewModel(ViewModel._userId, mockUserUtil, profileService, adminService);
+                    var createProfileViewModel = new ViewModels.CreateProfileViewModel(ViewModel._userId, profileService, mockUserUtil);
+
+                    rootFrame.Navigate(typeof(SplashView));
+                    if (rootFrame.Content is SplashView splashView)
+                    {
+                        splashView.SetViewModel(splashViewModel, createProfileViewModel);
+                    }
+                }
             }
         }
 
@@ -522,7 +543,6 @@ namespace matchmaking.Views
 
             var (cx, cy) = ProjectToCanvas(_userCityCoords.Value.lat, _userCityCoords.Value.lon, w, h);
 
-            // Distance circle — convert km to pixels via latitude degrees
             double pixelsPerDegreeLat = (ImgMarginBottom - ImgMarginTop) * h / (MapLatNorth - MapLatSouth);
             double degreesLat = ViewModel.MaxDistance / 111.0;
             double pixelRadius = degreesLat * pixelsPerDegreeLat;
@@ -539,7 +559,6 @@ namespace matchmaking.Views
             Canvas.SetTop(circle, cy - pixelRadius);
             MapCanvas.Children.Add(circle);
 
-            // Outer ring of the pin
             double outerSize = 14;
             var pinOuter = new Ellipse
             {
@@ -553,7 +572,6 @@ namespace matchmaking.Views
             Canvas.SetTop(pinOuter, cy - outerSize / 2);
             MapCanvas.Children.Add(pinOuter);
 
-            // Inner dot of the pin
             double innerSize = 7;
             var pinInner = new Ellipse
             {

@@ -39,7 +39,7 @@ namespace matchmaking.ViewModels
         public string Name
         {
             get => _name;
-            private set => SetProperty(ref _name, value);
+            set => SetProperty(ref _name, value);
         }
 
         public int Age
@@ -295,7 +295,7 @@ namespace matchmaking.ViewModels
             Interests = new List<string>(profile.Interests ?? new List<string>());
         }
 
-        private ProfileData BuildProfileData() => new ProfileData(
+        private ProfileData BuildProfileData() => new ProfileData(Name,
             Gender, PreferredGenders, Location, Nationality,
             MaxDistance, MinPreferredAge, MaxPreferredAge,
             Bio, DisplayStarSign,

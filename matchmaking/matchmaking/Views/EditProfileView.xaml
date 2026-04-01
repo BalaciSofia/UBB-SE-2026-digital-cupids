@@ -195,7 +195,11 @@
 
                         <StackPanel Grid.Column="0" Spacing="4">
                             <TextBlock Text="Name" Style="{StaticResource FieldLabelStyle}"/>
-                            <TextBlock Text="{Binding Name}" Style="{StaticResource ValueTextStyle}"/>
+                            
+                            <TextBox Text="{Binding Name, Mode=TwoWay}"
+                                     PlaceholderText="Enter your name"
+                                     HorizontalAlignment="Stretch"
+                                     Style="{StaticResource SoftTextBoxStyle}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="1" Spacing="4">
@@ -223,7 +227,10 @@
 
                         <StackPanel Grid.Column="1" Spacing="4">
                             <TextBlock Text="Nationality" Style="{StaticResource FieldLabelStyle}"/>
-                            <TextBlock Text="{Binding Nationality}" Style="{StaticResource ValueTextStyle}"/>
+                            <TextBox Text="{Binding Nationality, Mode=TwoWay}"
+                                     PlaceholderText="Enter your nationality"
+                                     HorizontalAlignment="Stretch"
+                                     Style="{StaticResource SoftTextBoxStyle}"/>
                         </StackPanel>
                     </Grid>
 
@@ -397,6 +404,7 @@
                         <TextBlock x:Name="BioHeader"
                                    Text="Bio (0/250)"
                                    Style="{StaticResource FieldLabelStyle}"/>
+
                         <TextBox x:Name="BioBox"
                                  Text="{Binding Bio, Mode=TwoWay}"
                                  PlaceholderText="Write about yourself..."

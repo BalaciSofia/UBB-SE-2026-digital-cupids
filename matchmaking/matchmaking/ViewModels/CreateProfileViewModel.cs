@@ -108,6 +108,7 @@ namespace matchmaking.ViewModels
             _birthDate = userData.Birthdate;
 
             _profileData = new ProfileData(
+                string.Empty,
                 Gender.OTHER,
                 new List<Gender>(),
                 string.Empty,
