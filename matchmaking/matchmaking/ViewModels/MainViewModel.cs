@@ -15,7 +15,7 @@ namespace matchmaking.ViewModels
         public HotSeatViewModel HotSeatViewModel { get; }
         public EditProfileViewModel EditProfileViewModel { get; }
 
-        public MainViewModel(int userId, string connectionString)
+        public MainViewModel(int userId, string connectionString, bool firstLoad = false)
         {
             _userId = userId;
             _connectionString = connectionString;
@@ -42,7 +42,7 @@ namespace matchmaking.ViewModels
             var discoverService = new DiscoverService(profileRepo, interactionRepo, communityUtil, compatibilityUtil);
             var registerInteraction = new RegisterInteractionUseCase(interactionService, matchService, notificationService, profileRepo);
 
-            DiscoverViewModel = new DiscoverViewModel(userId, discoverService, registerInteraction, true);
+            DiscoverViewModel = new DiscoverViewModel(userId, discoverService, registerInteraction, firstLoad);
             NotificationsViewModel = new NotificationsViewModel(userId, notificationService);
             HotSeatViewModel = new HotSeatViewModel(userId, profileService, bidService, registerInteraction);
             EditProfileViewModel = new EditProfileViewModel(userId, profileService, photoService, questionaireUtil, interestUtil);

@@ -22,6 +22,7 @@ namespace matchmaking.ViewModels
         private string _statusMessage;
         private string _commonCommunitiesText;
         private string _matchPopupMessage;
+        private bool _isCurrentProfileArchived;
 
         public event Action<string>? ErrorOccurred;
 
@@ -64,10 +65,12 @@ namespace matchmaking.ViewModels
 
         public bool HasCandidates => _candidates.Count > 0 && _currentIndex >= 0 && _currentIndex < _candidates.Count;
 
-        public Visibility CandidatesVisibility => HasCandidates ? Visibility.Visible : Visibility.Collapsed;
-        public Visibility NoCandidatesVisibility => HasCandidates ? Visibility.Collapsed : Visibility.Visible;
-        public Visibility GuideVisibility => IsGuideVisible ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility CandidatesVisibility => IsDiscoverAvailable && HasCandidates ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility NoCandidatesVisibility => IsDiscoverAvailable && HasCandidates ? Visibility.Collapsed : Visibility.Visible;
+        public Visibility GuideVisibility => IsDiscoverAvailable && IsGuideVisible ? Visibility.Visible : Visibility.Collapsed;
         public Visibility MatchPopupVisibility => IsMatchPopupVisible ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility DiscoverActionsVisibility => IsDiscoverAvailable ? Visibility.Visible : Visibility.Collapsed;
+        public bool IsDiscoverAvailable => !_isCurrentProfileArchived;
 
         public DatingProfile? CurrentValidCandidate => HasCandidates ? _candidates[_currentIndex] : null;
 
@@ -126,6 +129,21 @@ namespace matchmaking.ViewModels
                 {
                     OnPropertyChanged(nameof(MatchPopupVisibility));
                     UpdateCommandStates();
+                }
+            }
+        }
+
+        public bool IsCurrentProfileArchived
+        {
+            get => _isCurrentProfileArchived;
+            private set
+            {
+                if (SetProperty(ref _isCurrentProfileArchived, value))
+                {
+                    OnPropertyChanged(nameof(IsDiscoverAvailable));
+                    OnPropertyChanged(nameof(DiscoverActionsVisibility));
+                    OnPropertyChanged(nameof(CandidatesVisibility));
+                    OnPropertyChanged(nameof(NoCandidatesVisibility));
                 }
             }
         }
@@ -198,6 +216,19 @@ namespace matchmaking.ViewModels
         {
             try
             {
+                IsCurrentProfileArchived = _discoverService.IsProfileArchived(_userId);
+                if (IsCurrentProfileArchived)
+                {
+                    IsGuideVisible = false;
+                    _candidates = new List<DatingProfile>();
+                    _currentIndex = 0;
+                    CurrentPhotoIndex = 0;
+                    StatusMessage = "Your profile needs to be unarchived in order to see the Discover section.";
+                    CommonCommunitiesText = "No communities in common";
+                    NotifyCandidateChanged();
+                    return;
+                }
+
                 _candidates = _discoverService.GetCandidates(_userId);
                 _currentIndex = 0;
                 CurrentPhotoIndex = 0;
@@ -416,6 +447,11 @@ namespace matchmaking.ViewModels
         {
             try
             {
+                if (!IsDiscoverAvailable)
+                {
+                    return;
+                }
+
                 IsGuideVisible = true;
             }
             catch (Exception ex)
@@ -477,6 +513,7 @@ namespace matchmaking.ViewModels
             OnPropertyChanged(nameof(HasCandidates));
             OnPropertyChanged(nameof(CandidatesVisibility));
             OnPropertyChanged(nameof(NoCandidatesVisibility));
+            OnPropertyChanged(nameof(DiscoverActionsVisibility));
             OnPropertyChanged(nameof(CurrentValidCandidate));
             OnPropertyChanged(nameof(CurrentPhoto));
             OnPropertyChanged(nameof(CurrentCandidateStarSign));

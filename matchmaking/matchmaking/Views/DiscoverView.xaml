@@ -99,7 +99,7 @@
                    HorizontalAlignment="Center" VerticalAlignment="Center"
                    FontSize="24" FontWeight="Bold" Foreground="White"/>
 
-        <Grid Grid.Row="1" Margin="0,20,0,20">
+        <Grid Grid.Row="1" Margin="0,20,0,20" Visibility="{x:Bind ViewModel.DiscoverActionsVisibility, Mode=OneWay}">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="40" VerticalAlignment="Center">
                 <Button Click="PassButton_Click" Width="80" Height="80" CornerRadius="40" Background="Transparent" BorderBrush="#eb3b59" BorderThickness="4" IsEnabled="{x:Bind ViewModel.HasCandidates, Mode=OneWay}">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE711;" Foreground="#eb3b59" FontSize="44"/>

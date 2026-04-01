@@ -530,7 +530,7 @@ namespace matchmaking.Views
             try
             {
                 ViewModel!.CreateDatingProfile();
-                var mainViewModel = new MainViewModel(ViewModel.UserId, App.ConnectionString);
+                var mainViewModel = new MainViewModel(ViewModel.UserId, App.ConnectionString, true);
                 Frame.Navigate(typeof(MainView), mainViewModel);
             }
             catch (Exception ex)

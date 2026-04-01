@@ -25,6 +25,12 @@ namespace matchmaking.Services
         }
 
         
+        public bool IsProfileArchived(int profileId)
+        {
+            DatingProfile? profile = ProfileRepo.FindById(profileId);
+            return profile != null && profile.IsArchived;
+        }
+
         public List<DatingProfile> GetCandidates(int profileId)
         {
             DatingProfile? user = ProfileRepo.FindById(profileId);

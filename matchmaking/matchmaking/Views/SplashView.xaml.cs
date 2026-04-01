@@ -66,7 +66,7 @@ namespace matchmaking.Views
                     break;
                 case Screen.DISCOVER:
                 default:
-                    var mainViewModel = new MainViewModel(ViewModel!.UserId, App.ConnectionString);
+                    var mainViewModel = new MainViewModel(ViewModel!.UserId, App.ConnectionString, false);
                     Frame.Navigate(typeof(MainView), mainViewModel);
                     break;
             }

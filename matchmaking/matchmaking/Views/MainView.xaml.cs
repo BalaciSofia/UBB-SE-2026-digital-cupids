@@ -40,6 +40,7 @@ namespace matchmaking.Views
             switch (tag)
             {
                 case "Discover":
+                    ViewModel.DiscoverViewModel.LoadCandidates();
                     ContentFrame.Navigate(typeof(DiscoverView));
                     if (ContentFrame.Content is DiscoverView discoverView)
                     {
