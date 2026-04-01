@@ -262,3 +262,24 @@ INSERT INTO ProfilePreferences (userId, gender) VALUES
 (24, 'NON_BINARY'),
 (27, 'FEMALE'),
 (30, 'NON_BINARY');
+
+GO
+
+CREATE TRIGGER trg_DeleteProfile
+ON Profiles
+INSTEAD OF DELETE
+AS
+BEGIN
+    DECLARE @id INT = (SELECT userId FROM deleted);
+
+    DELETE FROM Notifications  WHERE recipientId = @id OR fromId   = @id;
+    DELETE FROM Interactions   WHERE fromProfileId = @id OR toProfileId = @id;
+    DELETE FROM Matches        WHERE user1Id = @id OR user2Id = @id;
+    DELETE FROM ProfilePreferences WHERE userId = @id;
+    DELETE FROM ProfileInterests   WHERE userId = @id;
+    DELETE FROM Bids               WHERE userId = @id;
+    DELETE FROM Photos             WHERE userId = @id;
+    DELETE FROM DatingAdmin        WHERE userId = @id;
+    DELETE FROM Profiles           WHERE userId = @id;
+END;
+GO

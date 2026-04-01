@@ -1,10 +1,11 @@
-﻿using System;
+﻿using matchmaking.Domain;
+using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
-using matchmaking.Domain;
+using Windows.System;
 
 namespace matchmaking.Repositories
 {
@@ -214,11 +215,8 @@ namespace matchmaking.Repositories
         }
         public DatingProfile? DeleteById(int id)
         {
-            const string query = @"
-                DELETE FROM Profiles
-                OUTPUT DELETED.userId, DELETED.name, DELETED.gender, DELETED.location, DELETED.nationality,DELETED.maxDistance, DELETED.age, DELETED.minPrefAge, DELETED.maxPrefAge,
-                DELETED.bio, DELETED.displayStarSign, DELETED.isArchived, DELETED.dateOfBirth,DELETED.loverType, DELETED.isHotSeat, DELETED.boost, DELETED.boostDay, DELETED.hotSeatDay
-                WHERE userId = @userId;";
+            DatingProfile profile = FindById(id);
+            const string query = @"DELETE FROM Profiles WHERE userId = @userId";
 
             using SqlConnection connection = new SqlConnection(_connectionString);
             using SqlCommand command = new SqlCommand(query, connection);
@@ -226,12 +224,14 @@ namespace matchmaking.Repositories
             command.Parameters.AddWithValue("@userId", id);
 
             connection.Open();
-            using SqlDataReader reader = command.ExecuteReader();
+            command.ExecuteNonQuery();
 
-            if (reader.Read())
-                return MapProfile(reader);
+            DatingProfile? check = FindById(id);
 
-            return null;
+            if (check != null)
+                throw new Exception($"Profile {id} was not deleted successfully.");
+
+            return profile;
         }
 
         public DatingProfile? FindById(int id)
