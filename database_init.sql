@@ -149,9 +149,6 @@ VALUES
 (29,'Simona Luca',       'FEMALE',     'Cluj-Napoca', 'Romanian', 80, 27, 23, 34, 'Music and festivals.', 1, 0, '1997-03-12', 'SOCIAL_EXPLORER', NULL, NULL, NULL, NULL),
 (30,'Tudor Neagu',       'MALE',       'Cluj-Napoca', 'Romanian', 150, 35, 28, 42, 'Traveler and storyteller.', 0, 0, '1989-10-25', 'ADVENTURE_SEEKER', NULL, NULL, NULL, NULL);
 
-SELECT *
-FROM Profiles
-
 
 -- ProfileInterests
 INSERT INTO ProfileInterests (userId, interest) VALUES

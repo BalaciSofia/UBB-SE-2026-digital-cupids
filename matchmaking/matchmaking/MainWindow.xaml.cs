@@ -10,7 +10,7 @@ namespace matchmaking
 {
     public sealed partial class MainWindow : Window
     {
-        private const int UserId = 25;
+        private const int UserId = 40;
 
         public MainWindow()
         {
