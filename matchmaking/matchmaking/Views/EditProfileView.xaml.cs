@@ -28,6 +28,7 @@ namespace matchmaking.Views
         {
             InitializeComponent();
         }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -92,6 +93,7 @@ namespace matchmaking.Views
             UpdateArchivedBanner();
             UpdateQuestionnaireButton();
         }
+
         private void RenderPhotos()
         {
             _isRenderingPhotos = true;
@@ -101,7 +103,6 @@ namespace matchmaking.Views
             foreach (Photo photo in ViewModel.Photos)
             {
                 Grid slot = CreatePhotoSlot(photo);
-
                 PhotosListView.Items.Add(slot);
             }
 
@@ -147,7 +148,7 @@ namespace matchmaking.Views
             _isRenderingPhotos = false;
         }
 
-        private void PhotoItems_VectorChanged(Windows.Foundation.Collections.IObservableVector<object> sender,Windows.Foundation.Collections.IVectorChangedEventArgs e)
+        private void PhotoItems_VectorChanged(Windows.Foundation.Collections.IObservableVector<object> sender, Windows.Foundation.Collections.IVectorChangedEventArgs e)
         {
             if (_isRenderingPhotos || ViewModel == null)
                 return;
@@ -166,7 +167,6 @@ namespace matchmaking.Views
 
         private async void AddPhoto_Click(object sender, RoutedEventArgs e)
         {
-
             var picker = new Windows.Storage.Pickers.FileOpenPicker();
             picker.FileTypeFilter.Add(".jpg");
             picker.FileTypeFilter.Add(".jpeg");
@@ -198,7 +198,7 @@ namespace matchmaking.Views
 
                 Button btn = new Button();
                 btn.Content = genders[i];
-                btn.Style = isSelected 
+                btn.Style = isSelected
                     ? (Style)Resources["SelectedInterestButtonStyle"]
                     : (Style)Resources["UnselectedInterestButtonStyle"];
 
@@ -228,37 +228,36 @@ namespace matchmaking.Views
 
                 Button btn = new Button();
                 btn.Content = interest;
-                btn.IsEnabled = !isSelected || ViewModel.CanRemoveInterest(interest);
-                btn.Style = isSelected 
+                btn.IsEnabled = true;
+                btn.Style = isSelected
                     ? (Style)Resources["SelectedInterestButtonStyle"]
                     : (Style)Resources["UnselectedInterestButtonStyle"];
 
                 string interestCopy = interest;
-                bool wasSelected = isSelected;
                 btn.Click += (s, e) =>
                 {
                     string? existingInterest = ViewModel.Interests
                         .FirstOrDefault(i => i.Trim().Equals(interestCopy.Trim(), StringComparison.OrdinalIgnoreCase));
 
-                    if (wasSelected && existingInterest != null && ViewModel.CanRemoveInterest(existingInterest))
+                    if (existingInterest != null)
                     {
-                        ViewModel.RemoveInterest(existingInterest);
-                        btn.Style = (Style)Resources["UnselectedInterestButtonStyle"];
-                        btn.IsEnabled = true;
+                        if (ViewModel.CanRemoveInterest(existingInterest))
+                            ViewModel.RemoveInterest(existingInterest);
                     }
-                    else if (!wasSelected && ViewModel.CanAddInterest())
+                    else
                     {
-                        ViewModel.AddInterest(interestCopy);
-                        btn.Style = (Style)Resources["SelectedInterestButtonStyle"];
-                        btn.IsEnabled = ViewModel.CanRemoveInterest(interestCopy);
+                        if (ViewModel.CanAddInterest())
+                            ViewModel.AddInterest(interestCopy);
                     }
 
+                    RenderInterests();
                     UpdateInterestsHeader();
                 };
 
                 InterestsPanel.Children.Add(btn);
             }
         }
+
         private void UpdateInterestsHeader()
         {
             InterestsHeader.Text = $"Interests ({ViewModel.Interests.Count}/15)";
@@ -308,7 +307,7 @@ namespace matchmaking.Views
 
             if (result == ContentDialogResult.Primary)
             {
-                ViewModel.SaveChanges();
+                ViewModel.SaveChangesCommand.Execute(null);
             }
         }
 
@@ -325,20 +324,45 @@ namespace matchmaking.Views
 
             if (result == ContentDialogResult.Primary)
             {
-                ViewModel.DiscardChanges();
+                ViewModel.DiscardChangesCommand.Execute(null);
                 RefreshAllUI();
             }
         }
 
-        private void ArchiveProfile_Click(object sender, RoutedEventArgs e)
+        private async void ArchiveProfile_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.ArchiveProfile();
-            UpdateArchivedBanner();
+            ContentDialog dialog = new ContentDialog();
+            dialog.Title = "Archive Profile";
+            dialog.Content = "Are you sure you want to archive your profile? It will not be visible to other users.";
+            dialog.PrimaryButtonText = "Archive";
+            dialog.CloseButtonText = "Cancel";
+            dialog.XamlRoot = this.XamlRoot;
+
+            ContentDialogResult result = await dialog.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                ViewModel.ArchiveProfileCommand.Execute(null);
+                UpdateArchivedBanner();
+            }
         }
-        private void UnarchiveProfile_Click(object sender, RoutedEventArgs e)
+
+        private async void UnarchiveProfile_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.UnarchiveProfile();
-            UpdateArchivedBanner();
+            ContentDialog dialog = new ContentDialog();
+            dialog.Title = "Unarchive Profile";
+            dialog.Content = "Are you sure you want to unarchive your profile? It will be visible to other users again.";
+            dialog.PrimaryButtonText = "Unarchive";
+            dialog.CloseButtonText = "Cancel";
+            dialog.XamlRoot = this.XamlRoot;
+
+            ContentDialogResult result = await dialog.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                ViewModel.UnarchiveProfileCommand.Execute(null);
+                UpdateArchivedBanner();
+            }
         }
 
         private async void DeleteProfile_Click(object sender, RoutedEventArgs e)
@@ -354,7 +378,7 @@ namespace matchmaking.Views
 
             if (result == ContentDialogResult.Primary)
             {
-                ViewModel.DeleteProfile();
+                ViewModel.DeleteProfileCommand.Execute(null);
             }
         }
 
@@ -367,7 +391,6 @@ namespace matchmaking.Views
 
         private void QuestionnaireButton_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel!.PrepareQuestionnaire();
             Frame.Navigate(typeof(QuestionnaireView), ViewModel);
         }
 
@@ -377,7 +400,5 @@ namespace matchmaking.Views
                 ? Visibility.Collapsed
                 : Visibility.Visible;
         }
-
-        
     }
 }
