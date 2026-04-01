@@ -212,10 +212,13 @@
 
                         <StackPanel Grid.Column="0" Spacing="4">
                             <TextBlock Text="Location" Style="{StaticResource FieldLabelStyle}"/>
-                            <TextBox Text="{Binding Location, Mode=TwoWay}"
-                                     PlaceholderText="Enter your city"
-                                     HorizontalAlignment="Stretch"
-                                     Style="{StaticResource SoftTextBoxStyle}"/>
+                            <ComboBox x:Name="LocationComboBox"
+                                      PlaceholderText="Select your city"
+                                      HorizontalAlignment="Stretch"
+                                      SelectionChanged="HandleLocationChanged"
+                                      Background="{StaticResource CardBackgroundBrush}"
+                                      BorderBrush="{StaticResource MediumGrayBrush}"
+                                      Foreground="{StaticResource TextPrimaryBrush}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="1" Spacing="4">
@@ -333,27 +336,55 @@
                         </Border>
                     </StackPanel>
 
-                    <StackPanel Spacing="8">
+
+
+                    <StackPanel Spacing="4">
                         <TextBlock x:Name="DistanceHeader"
-                                   Text="Maximum Distance"
-                                   Style="{StaticResource FieldLabelStyle}"/>
-                        <Border Background="{StaticResource SoftGrayBrush}"
-                                BorderBrush="{StaticResource CardBorderBrush}"
-                                BorderThickness="1"
-                                CornerRadius="12"
-                                Padding="14">
-                            <Slider x:Name="DistanceSlider"
-                                    Minimum="1"
-                                    Maximum="500"
-                                    Value="{Binding MaxDistance, Mode=TwoWay}"/>
-                        </Border>
+               Text="Maximum Distance"
+               Style="{StaticResource FieldLabelStyle}"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Column="0"
+                Background="{StaticResource SoftGrayBrush}"
+                BorderBrush="{StaticResource CardBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="12"
+                Padding="8"
+                HorizontalAlignment="Stretch">
+                                <Slider x:Name="DistanceSlider"
+                    Minimum="1"
+                    Maximum="500"
+                    Value="{Binding MaxDistance, Mode=TwoWay}"
+                    Orientation="Vertical"
+                    Height="280"
+                    HorizontalAlignment="Center"/>
+                            </Border>
+
+                            <Border Grid.Column="1"
+                BorderBrush="{StaticResource CardBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="14"
+                Height="400" Width="600"
+                                 
+                Margin="8,0,0,0"
+                Background="{StaticResource SoftGrayBrush}">
+                                <Grid>
+                                    <Image Source="ms-appx:///Assets/map.jpg"
+                       Stretch="Fill"/>
+                                    <Canvas x:Name="MapCanvas"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"/>
+                                </Grid>
+                            </Border>
+
+                        </Grid>
                     </StackPanel>
 
-                    <Border BorderBrush="{StaticResource CardBorderBrush}"
-                            BorderThickness="1"
-                            CornerRadius="14"
-                            Height="280"
-                            Background="{StaticResource SoftGrayBrush}"/>
                 </StackPanel>
             </Border>
 

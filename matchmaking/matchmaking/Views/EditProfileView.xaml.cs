@@ -1,4 +1,6 @@
 using matchmaking.Domain;
+using matchmaking.Services;
+using matchmaking.Utils;
 using matchmaking.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -7,8 +9,10 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Shapes;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -23,6 +27,17 @@ namespace matchmaking.Views
     {
         internal EditProfileViewModel? ViewModel { get; private set; }
         private bool _isRenderingPhotos = false;
+
+        private const double MapLatNorth = 48.265;
+        private const double MapLatSouth = 43.618;
+        private const double MapLonWest = 20.261;
+        private const double MapLonEast = 29.757;
+        private const double ImgMarginTop = 0.03;
+        private const double ImgMarginBottom = 0.93;
+        private const double ImgMarginLeft = 0.04;
+        private const double ImgMarginRight = 0.96;
+
+        private (double lat, double lon)? _userCityCoords = null;
 
         public EditProfileView()
         {
@@ -46,6 +61,14 @@ namespace matchmaking.Views
             DistanceSlider.ValueChanged -= DistanceSlider_ValueChanged;
             DistanceSlider.ValueChanged += DistanceSlider_ValueChanged;
 
+            LocationComboBox.SelectionChanged -= HandleLocationChanged;
+            LocationComboBox.SelectionChanged += HandleLocationChanged;
+
+            LoadLocations();
+            MapCanvas.SizeChanged -= MapCanvas_SizeChanged;
+            MapCanvas.SizeChanged += MapCanvas_SizeChanged;
+
+            LoadCityCoordinates();
             RefreshAllUI();
         }
 
@@ -91,6 +114,7 @@ namespace matchmaking.Views
             UpdateDistanceHeader();
             UpdateArchivedBanner();
             UpdateQuestionnaireButton();
+            DrawMap();
         }
         private void RenderPhotos()
         {
@@ -228,37 +252,36 @@ namespace matchmaking.Views
 
                 Button btn = new Button();
                 btn.Content = interest;
-                btn.IsEnabled = !isSelected || ViewModel.CanRemoveInterest(interest);
-                btn.Style = isSelected 
+                btn.IsEnabled = true;
+                btn.Style = isSelected
                     ? (Style)Resources["SelectedInterestButtonStyle"]
                     : (Style)Resources["UnselectedInterestButtonStyle"];
 
                 string interestCopy = interest;
-                bool wasSelected = isSelected;
                 btn.Click += (s, e) =>
                 {
                     string? existingInterest = ViewModel.Interests
                         .FirstOrDefault(i => i.Trim().Equals(interestCopy.Trim(), StringComparison.OrdinalIgnoreCase));
 
-                    if (wasSelected && existingInterest != null && ViewModel.CanRemoveInterest(existingInterest))
+                    if (existingInterest != null)
                     {
-                        ViewModel.RemoveInterest(existingInterest);
-                        btn.Style = (Style)Resources["UnselectedInterestButtonStyle"];
-                        btn.IsEnabled = true;
+                        if (ViewModel.CanRemoveInterest(existingInterest))
+                            ViewModel.RemoveInterest(existingInterest);
                     }
-                    else if (!wasSelected && ViewModel.CanAddInterest())
+                    else
                     {
-                        ViewModel.AddInterest(interestCopy);
-                        btn.Style = (Style)Resources["SelectedInterestButtonStyle"];
-                        btn.IsEnabled = ViewModel.CanRemoveInterest(interestCopy);
+                        if (ViewModel.CanAddInterest())
+                            ViewModel.AddInterest(interestCopy);
                     }
 
+                    RenderInterests();
                     UpdateInterestsHeader();
                 };
 
                 InterestsPanel.Children.Add(btn);
             }
         }
+
         private void UpdateInterestsHeader()
         {
             InterestsHeader.Text = $"Interests ({ViewModel.Interests.Count}/15)";
@@ -280,8 +303,50 @@ namespace matchmaking.Views
         private void DistanceSlider_ValueChanged(object sender, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
         {
             UpdateDistanceHeader();
+            DrawMap();
         }
 
+        private void LoadLocations()
+        {
+            LocationUtil locationUtil = new LocationUtil();
+            List<string> locations = locationUtil.GetAllLocations();
+            foreach (string location in locations)
+            {
+                LocationComboBox.Items.Add(location);
+            }
+            SyncLocationToComboBox();
+        }
+
+        private void SyncLocationToComboBox()
+        {
+            if (ViewModel?.Location != null && !string.IsNullOrEmpty(ViewModel.Location))
+            {
+                int index = -1;
+                for (int i = 0; i < LocationComboBox.Items.Count; i++)
+                {
+                    if (LocationComboBox.Items[i] is string item && item.Equals(ViewModel.Location, StringComparison.OrdinalIgnoreCase))
+                    {
+                        index = i;
+                        break;
+                    }
+                }
+
+                if (index >= 0)
+                {
+                    LocationComboBox.SelectedIndex = index;
+                }
+            }
+        }
+
+        private void HandleLocationChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ViewModel == null || LocationComboBox.SelectedItem == null)
+                return;
+
+            ViewModel.Location = LocationComboBox.SelectedItem as string ?? string.Empty;
+            LoadCityCoordinates();
+            DrawMap();
+        }
         private void BioBox_BeforeTextChanging(TextBox sender, TextBoxBeforeTextChangingEventArgs args)
         {
             if (sender.Text.Length >= 250)
@@ -378,6 +443,110 @@ namespace matchmaking.Views
                 : Visibility.Visible;
         }
 
-        
+        private void LoadCityCoordinates()
+        {
+            _userCityCoords = null;
+            if (ViewModel == null) return;
+
+            string cityName = ViewModel.Location?.Trim() ?? "";
+            if (string.IsNullOrEmpty(cityName)) return;
+
+            string csvPath = System.IO.Path.Combine(AppContext.BaseDirectory, "locations.csv");
+            if (!File.Exists(csvPath)) return;
+
+            foreach (string line in File.ReadAllLines(csvPath))
+            {
+                string[] parts = line.Split(',');
+                if (parts.Length < 3) continue;
+
+                if (parts[0].Trim().Equals(cityName, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (double.TryParse(parts[1].Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out double lat) &&
+                        double.TryParse(parts[2].Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out double lon))
+                    {
+                        _userCityCoords = (lat, lon);
+                        return;
+                    }
+                }
+            }
+        }
+
+  
+        private (double x, double y) ProjectToCanvas(double lat, double lon, double canvasW, double canvasH)
+        {
+            double pixelLeft = ImgMarginLeft * canvasW;
+            double pixelRight = ImgMarginRight * canvasW;
+            double pixelTop = ImgMarginTop * canvasH;
+            double pixelBottom = ImgMarginBottom * canvasH;
+
+            double x = pixelLeft + (lon - MapLonWest) / (MapLonEast - MapLonWest) * (pixelRight - pixelLeft);
+            double y = pixelTop + (MapLatNorth - lat) / (MapLatNorth - MapLatSouth) * (pixelBottom - pixelTop);
+            return (x, y);
+        }
+
+        private void DrawMap()
+        {
+            if (ViewModel == null || MapCanvas == null) return;
+
+            MapCanvas.Children.Clear();
+
+            if (_userCityCoords == null) return;
+
+            double w = MapCanvas.ActualWidth;
+            double h = MapCanvas.ActualHeight;
+            if (w <= 0 || h <= 0) return;
+
+            var (cx, cy) = ProjectToCanvas(_userCityCoords.Value.lat, _userCityCoords.Value.lon, w, h);
+
+            // Distance circle — convert km to pixels via latitude degrees
+            double pixelsPerDegreeLat = (ImgMarginBottom - ImgMarginTop) * h / (MapLatNorth - MapLatSouth);
+            double degreesLat = ViewModel.MaxDistance / 111.0;
+            double pixelRadius = degreesLat * pixelsPerDegreeLat;
+
+            var circle = new Ellipse
+            {
+                Width = pixelRadius * 2,
+                Height = pixelRadius * 2,
+                Fill = new SolidColorBrush(Windows.UI.Color.FromArgb(55, 201, 127, 157)),
+                Stroke = new SolidColorBrush(Windows.UI.Color.FromArgb(180, 201, 127, 157)),
+                StrokeThickness = 1.5
+            };
+            Canvas.SetLeft(circle, cx - pixelRadius);
+            Canvas.SetTop(circle, cy - pixelRadius);
+            MapCanvas.Children.Add(circle);
+
+            // Outer ring of the pin
+            double outerSize = 14;
+            var pinOuter = new Ellipse
+            {
+                Width = outerSize,
+                Height = outerSize,
+                Fill = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 255, 255)),
+                Stroke = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 180, 50, 90)),
+                StrokeThickness = 2
+            };
+            Canvas.SetLeft(pinOuter, cx - outerSize / 2);
+            Canvas.SetTop(pinOuter, cy - outerSize / 2);
+            MapCanvas.Children.Add(pinOuter);
+
+            // Inner dot of the pin
+            double innerSize = 7;
+            var pinInner = new Ellipse
+            {
+                Width = innerSize,
+                Height = innerSize,
+                Fill = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 180, 50, 90))
+            };
+            Canvas.SetLeft(pinInner, cx - innerSize / 2);
+            Canvas.SetTop(pinInner, cy - innerSize / 2);
+            MapCanvas.Children.Add(pinInner);
+        }
+
+        private void MapCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            DrawMap();
+        }
+
+
     }
 }
