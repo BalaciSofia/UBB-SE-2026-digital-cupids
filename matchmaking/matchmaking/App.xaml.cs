@@ -1,8 +1,9 @@
 ﻿using matchmaking.Domain;
 using matchmaking.Repositories;
-using matchmaking.Views;
-using matchmaking.ViewModels;
+using matchmaking.Services;
 using matchmaking.Utils;
+using matchmaking.ViewModels;
+using matchmaking.Views;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.UI.Xaml;
