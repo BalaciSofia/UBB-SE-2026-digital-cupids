@@ -14,6 +14,8 @@ namespace matchmaking.ViewModels
         public NotificationsViewModel NotificationsViewModel { get; }
         public HotSeatViewModel HotSeatViewModel { get; }
         public EditProfileViewModel EditProfileViewModel { get; }
+        public NotificationService NotificationService { get; }
+        public int UserId => _userId;
 
         public MainViewModel(int userId, string connectionString, bool firstLoad = false)
         {
@@ -46,6 +48,7 @@ namespace matchmaking.ViewModels
             NotificationsViewModel = new NotificationsViewModel(userId, notificationService);
             HotSeatViewModel = new HotSeatViewModel(userId, profileService, bidService, registerInteraction);
             EditProfileViewModel = new EditProfileViewModel(userId, profileService, photoService, questionaireUtil, interestUtil);
+            NotificationService = notificationService;
         }
     }
 }
