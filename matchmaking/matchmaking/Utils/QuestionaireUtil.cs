@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using matchmaking.Domain;
@@ -8,10 +9,9 @@ namespace matchmaking.Utils
 {
     internal class QuestionaireUtil
     {
-        List<(String, LoverType)> shuffledQuestions = new System.Collections.Generic.List<(string, LoverType)>();
+        private List<(string Question, LoverType Type)>? _shuffledQuestions;
 
-
-        List<(String, LoverType type)> questions = new System.Collections.Generic.List<(string, LoverType type)>
+        private readonly List<(string Question, LoverType Type)> _questions = new()
         {
             ("I feel energized after spending time with a group of people.", LoverType.SOCIAL_EXPLORER),
             ("I enjoy meeting new people frequently.", LoverType.SOCIAL_EXPLORER),
@@ -41,19 +41,30 @@ namespace matchmaking.Utils
 
         public QuestionaireUtil()
         {
-
         }
 
-        public List<String> GetQuestions()
+        public List<string> GetQuestions()
         {
-            Random random = new Random();
-            shuffledQuestions = questions.OrderBy(q => random.Next()).ToList();
-            return shuffledQuestions.Select(q => q.Item1).ToList();
+            if (_shuffledQuestions == null)
+            {
+                Random random = new Random();
+                _shuffledQuestions = _questions.OrderBy(q => random.Next()).ToList();
+            }
+
+            return _shuffledQuestions.Select(q => q.Question).ToList();
+        }
+
+        public void ResetShuffle()
+        {
+            _shuffledQuestions = null;
         }
 
         public LoverType CalculateLoveType(List<int> answers)
         {
-            Dictionary<LoverType, int> scores = new Dictionary<LoverType, int>
+            if (_shuffledQuestions == null)
+                throw new InvalidOperationException("GetQuestions() must be called before CalculateLoveType().");
+
+            Dictionary<LoverType, int> scores = new()
             {
                 { LoverType.SOCIAL_EXPLORER, 0 },
                 { LoverType.DEEP_THINKER, 0 },
@@ -62,18 +73,14 @@ namespace matchmaking.Utils
                 { LoverType.EMPATHETIC_CONNECTOR, 0 },
             };
 
-            for (int i = 0; i < answers.Count; i++)
+            for (int i = 0; i < answers.Count && i < _shuffledQuestions.Count; i++)
             {
-                scores[shuffledQuestions[i].Item2] += answers[i];
+                scores[_shuffledQuestions[i].Type] += answers[i];
             }
 
             int maxScore = scores.Values.Max();
-            foreach (LoverType type in scores.Keys)
-            {
-                if (scores[type] == maxScore) return type;
-            }
-            throw new Exception("No type found for these answers");
+            var topTypes = scores.Where(s => s.Value == maxScore).Select(s => s.Key).ToList();
+            return topTypes[new Random().Next(topTypes.Count)];
         }
-
     }
 }

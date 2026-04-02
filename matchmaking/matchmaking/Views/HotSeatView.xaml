@@ -236,7 +236,7 @@
                     FontSize="14"
                     Foreground="Gray"/>
                 <Button
-                    Content="🚀 Boost for 25 RON"
+                    Content="Boost for 25 RON"
                     IsEnabled="{x:Bind ViewModel.CanBoost, Mode=OneWay}"
                     Click="BoostProfile_Click"/>
 

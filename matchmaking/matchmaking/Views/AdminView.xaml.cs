@@ -62,6 +62,29 @@ namespace matchmaking.Views
             NoTicketText.Visibility = Visibility.Visible;
         }
 
+        private async void OpenCertificate_Click(object sender, RoutedEventArgs e)
+        {
+            var ticket = (SupportTicket)((Button)sender).Tag;
+            if (string.IsNullOrEmpty(ticket.MarriageCertificatePath)) return;
+
+            try
+            {
+                var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(ticket.MarriageCertificatePath);
+                await Windows.System.Launcher.LaunchFileAsync(file);
+            }
+            catch (Exception ex)
+            {
+                var dialog = new ContentDialog
+                {
+                    Title = "Error",
+                    Content = $"Could not open certificate: {ex.Message}",
+                    CloseButtonText = "OK",
+                    XamlRoot = this.XamlRoot
+                };
+                await dialog.ShowAsync();
+            }
+        }
+
         private void SearchResultsList_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
         {
             if (args.Item is DatingProfile profile)
