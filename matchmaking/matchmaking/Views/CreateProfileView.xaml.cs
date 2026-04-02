@@ -1,5 +1,4 @@
 using matchmaking.Domain;
-using matchmaking.Services;
 using matchmaking.Utils;
 using matchmaking.ViewModels;
 using Microsoft.UI;
@@ -35,6 +34,8 @@ namespace matchmaking.Views
             {
                 ViewModel = viewModel;
                 ViewModel.PropertyChanged += OnViewModelPropertyChanged;
+                ViewModel.ProfileCreated += OnProfileCreated;
+                ViewModel.ErrorOccurred += OnErrorOccurred;
                 ViewModel.LoadUserData(ViewModel.UserId);
                 AgeText.Text = GetAge().ToString();
                 LoadLocations();
@@ -56,12 +57,46 @@ namespace matchmaking.Views
                 if (photos.Count > 0)
                     PreviewPhotoImage.Source = new BitmapImage(new Uri(photos[ViewModel.CurrentPhotoIndex].Location!));
             }
-        }
-        private void HandleNameChanged(object sender, TextChangedEventArgs e)
-        {
-            if (ViewModel == null) return;
-            ViewModel.Name = NameTextBox.Text;
+            else if (e.PropertyName == nameof(ViewModel.MaxDistance))
+            {
+                MaxDistanceValueText.Text = ((int)ViewModel!.MaxDistance).ToString();
+            }
+            else if (e.PropertyName == nameof(ViewModel.MinPreferredAge))
+            {
+                MinAgeValueText.Text = ((int)ViewModel!.MinPreferredAge).ToString();
+            }
+            else if (e.PropertyName == nameof(ViewModel.MaxPreferredAge))
+            {
+                MaxAgeValueText.Text = ((int)ViewModel!.MaxPreferredAge).ToString();
+            }
+            else if (e.PropertyName == nameof(ViewModel.BioLength))
+            {
+                BioLengthText.Text = ViewModel!.BioLength.ToString();
+            }
+            else if (e.PropertyName == nameof(ViewModel.ProfileData))
+            {
+                if (ViewModel!.CurrentStep == 2)
+                    UpdatePhotoSlots();
+            }
+
             UpdateNextButton();
+        }
+
+        private void OnProfileCreated()
+        {
+            var mainViewModel = new MainViewModel(ViewModel!.UserId, App.ConnectionString, true);
+            Frame.Navigate(typeof(MainView), mainViewModel);
+        }
+
+        private async void OnErrorOccurred(string message)
+        {
+            await new ContentDialog
+            {
+                Title = "Error",
+                Content = message,
+                CloseButtonText = "OK",
+                XamlRoot = XamlRoot
+            }.ShowAsync();
         }
 
         private int GetAge()
@@ -73,35 +108,6 @@ namespace matchmaking.Views
             return age;
         }
 
-        private void SyncUItoViewModel()
-        {
-            if (ViewModel?.ProfileData == null) return;
-
-            ViewModel.Name = NameTextBox.Text;
-            ViewModel.ProfileData.Location = LocationComboBox.SelectedItem as string ?? string.Empty;
-            ViewModel.ProfileData.Nationality = NationalityTextBox.Text;
-            ViewModel.ProfileData.Gender = GenderComboBox.SelectedIndex switch
-            {
-                0 => Gender.MALE,
-                1 => Gender.FEMALE,
-                2 => Gender.NON_BINARY,
-                _ => Gender.OTHER
-            };
-
-            ViewModel.ProfileData.PreferredGenders = new List<Gender>();
-            if (PrefMaleCheckBox.IsChecked == true) ViewModel.ProfileData.PreferredGenders.Add(Gender.MALE);
-            if (PrefFemaleCheckBox.IsChecked == true) ViewModel.ProfileData.PreferredGenders.Add(Gender.FEMALE);
-            if (PrefNonBinaryCheckBox.IsChecked == true) ViewModel.ProfileData.PreferredGenders.Add(Gender.NON_BINARY);
-            if (PrefOtherCheckBox.IsChecked == true) ViewModel.ProfileData.PreferredGenders.Add(Gender.OTHER);
-
-            ViewModel.ProfileData.MaxDistance = (int)MaxDistanceSlider.Value;
-            ViewModel.ProfileData.MinPreferredAge = (int)AgeRangeSelector.RangeStart;
-            ViewModel.ProfileData.MaxPreferredAge = (int)AgeRangeSelector.RangeEnd;
-            ViewModel.ProfileData.DisplayStarSign = DisplayStarSignToggle.IsOn;
-
-            ViewModel.ProfileData.Bio = BioTextBox.Text;
-        }
-
         private void SyncViewModeltoUI()
         {
             if (ViewModel?.ProfileData == null) return;
@@ -110,39 +116,22 @@ namespace matchmaking.Views
 
             if (step == 1)
             {
-                NameTextBox.Text = ViewModel.Name;
-                LocationComboBox.SelectedItem = ViewModel.ProfileData.Location;
-                NationalityTextBox.Text = ViewModel.ProfileData.Nationality;
-                GenderComboBox.SelectedIndex = ViewModel.ProfileData.Gender switch
-                {
-                    Gender.MALE => 0,
-                    Gender.FEMALE => 1,
-                    Gender.NON_BINARY => 2,
-                    _ => 3
-                };
                 PrefMaleCheckBox.IsChecked = ViewModel.ProfileData.PreferredGenders.Contains(Gender.MALE);
                 PrefFemaleCheckBox.IsChecked = ViewModel.ProfileData.PreferredGenders.Contains(Gender.FEMALE);
                 PrefNonBinaryCheckBox.IsChecked = ViewModel.ProfileData.PreferredGenders.Contains(Gender.NON_BINARY);
                 PrefOtherCheckBox.IsChecked = ViewModel.ProfileData.PreferredGenders.Contains(Gender.OTHER);
-                MaxDistanceSlider.Value = ViewModel.ProfileData.MaxDistance;
-                AgeRangeSelector.RangeStart = ViewModel.ProfileData.MinPreferredAge;
-                AgeRangeSelector.RangeEnd = ViewModel.ProfileData.MaxPreferredAge;
-                MaxDistanceValueText.Text = ViewModel.ProfileData.MaxDistance.ToString();
-                MinAgeValueText.Text = ViewModel.ProfileData.MinPreferredAge.ToString();
-                MaxAgeValueText.Text = ViewModel.ProfileData.MaxPreferredAge.ToString();
-                DisplayStarSignToggle.IsOn = ViewModel.ProfileData.DisplayStarSign;
+                MaxDistanceValueText.Text = ((int)ViewModel.MaxDistance).ToString();
+                MinAgeValueText.Text = ((int)ViewModel.MinPreferredAge).ToString();
+                MaxAgeValueText.Text = ((int)ViewModel.MaxPreferredAge).ToString();
             }
             else if (step == 3)
             {
-                BioTextBox.Text = ViewModel.ProfileData.Bio;
-                BioLengthText.Text = ViewModel.ProfileData.Bio.Length.ToString();
+                BioLengthText.Text = ViewModel.BioLength.ToString();
             }
         }
 
         private void UpdateStepUI()
         {
-            SyncUItoViewModel();
-
             int step = ViewModel!.CurrentStep;
 
             Step1Panel.Visibility = step == 1 ? Visibility.Visible : Visibility.Collapsed;
@@ -183,9 +172,9 @@ namespace matchmaking.Views
 
         private bool IsStep1Valid() =>
             !string.IsNullOrWhiteSpace(ViewModel!.Name) &&
-            !string.IsNullOrWhiteSpace(ViewModel!.ProfileData!.Location) &&
-            !string.IsNullOrWhiteSpace(ViewModel.ProfileData.Nationality) &&
-            GenderComboBox.SelectedIndex >= 0 &&
+            !string.IsNullOrWhiteSpace(ViewModel.Location) &&
+            !string.IsNullOrWhiteSpace(ViewModel.Nationality) &&
+            ViewModel.GenderIndex >= 0 &&
             (PrefMaleCheckBox.IsChecked == true ||
              PrefFemaleCheckBox.IsChecked == true ||
              PrefNonBinaryCheckBox.IsChecked == true ||
@@ -205,33 +194,6 @@ namespace matchmaking.Views
                 LocationComboBox.Items.Add(location);
         }
 
-        private void HandleLocationChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (ViewModel?.ProfileData == null) return;
-            ViewModel.ProfileData.Location = LocationComboBox.SelectedItem as string ?? string.Empty;
-            UpdateNextButton();
-        }
-
-        private void HandleNationalityChanged(object sender, TextChangedEventArgs e)
-        {
-            if (ViewModel?.ProfileData == null) return;
-            ViewModel.ProfileData.Nationality = NationalityTextBox.Text;
-            UpdateNextButton();
-        }
-
-        private void HandleGenderChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (ViewModel?.ProfileData == null) return;
-            ViewModel.ProfileData.Gender = GenderComboBox.SelectedIndex switch
-            {
-                0 => Gender.MALE,
-                1 => Gender.FEMALE,
-                2 => Gender.NON_BINARY,
-                _ => Gender.OTHER
-            };
-            UpdateNextButton();
-        }
-
         private void HandlePreferredGenderChanged(object sender, RoutedEventArgs e)
         {
             if (ViewModel?.ProfileData == null) return;
@@ -241,22 +203,6 @@ namespace matchmaking.Views
             if (PrefNonBinaryCheckBox.IsChecked == true) ViewModel.ProfileData.PreferredGenders.Add(Gender.NON_BINARY);
             if (PrefOtherCheckBox.IsChecked == true) ViewModel.ProfileData.PreferredGenders.Add(Gender.OTHER);
             UpdateNextButton();
-        }
-
-        private void HandleMaxDistanceChanged(object sender, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
-        {
-            if (ViewModel?.ProfileData == null) return;
-            ViewModel.ProfileData.MaxDistance = (int)MaxDistanceSlider.Value;
-            MaxDistanceValueText.Text = ((int)MaxDistanceSlider.Value).ToString();
-        }
-
-        private void HandleAgeRangeChanged(object sender, object e)
-        {
-            if (ViewModel?.ProfileData == null) return;
-            ViewModel.ProfileData.MinPreferredAge = (int)AgeRangeSelector.RangeStart;
-            ViewModel.ProfileData.MaxPreferredAge = (int)AgeRangeSelector.RangeEnd;
-            MinAgeValueText.Text = ((int)AgeRangeSelector.RangeStart).ToString();
-            MaxAgeValueText.Text = ((int)AgeRangeSelector.RangeEnd).ToString();
         }
 
         private async void HandleAddPhotoClick(object sender, RoutedEventArgs e)
@@ -290,27 +236,6 @@ namespace matchmaking.Views
             try
             {
                 ViewModel!.AddPhoto(new Photo(ViewModel.UserId, file.Path, slotIndex));
-                UpdatePhotoSlots();
-                UpdateNextButton();
-            }
-            catch (Exception ex)
-            {
-                await new ContentDialog
-                {
-                    Title = "Error",
-                    Content = ex.Message,
-                    CloseButtonText = "OK",
-                    XamlRoot = XamlRoot
-                }.ShowAsync();
-            }
-        }
-
-        private async void HandleRemovePhotoClick(object sender, RoutedEventArgs e)
-        {
-            int photoId = (int)(sender as Button)!.Tag;
-            try
-            {
-                ViewModel!.RemovePhoto(photoId);
                 UpdatePhotoSlots();
                 UpdateNextButton();
             }
@@ -369,7 +294,8 @@ namespace matchmaking.Views
                     Button removeBtn = new Button
                     {
                         Content = new FontIcon { Glyph = "\uE894", FontSize = 16 },
-                        Tag = photos[i].PhotoId,
+                        Command = ViewModel.RemovePhotoCommand,
+                        CommandParameter = photos[i].PhotoId,
                         HorizontalAlignment = HorizontalAlignment.Right,
                         VerticalAlignment = VerticalAlignment.Top,
                         Background = removeBg,
@@ -378,9 +304,7 @@ namespace matchmaking.Views
                         Height = 32,
                         CornerRadius = new CornerRadius(16),
                         Margin = new Thickness(0, 4, 4, 0),
-                        IsEnabled = canRemove
                     };
-                    removeBtn.Click += HandleRemovePhotoClick;
 
                     grid.Children.Add(dragGrid);
                     grid.Children.Add(removeBtn);
@@ -423,14 +347,6 @@ namespace matchmaking.Views
                 ViewModel.SwapPhotos(sourceSlot, targetSlot);
                 UpdatePhotoSlots();
             }
-        }
-
-        private void HandleBioTextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (ViewModel?.ProfileData == null) return;
-            ViewModel.ProfileData.Bio = BioTextBox.Text;
-            BioLengthText.Text = BioTextBox.Text.Length.ToString();
-            UpdateNextButton();
         }
 
         private void LoadInterests()
@@ -533,30 +449,5 @@ namespace matchmaking.Views
                 PreviewPhotoImage.Source = new BitmapImage(new Uri(preview.Photos[0].Location!));
         }
 
-        private void HandleTermsConditionsChecked(object sender, RoutedEventArgs e)
-        {
-            ViewModel!.TermsAccepted = TermsCheckBox.IsChecked == true;
-            CreateProfileButton.IsEnabled = ViewModel.TermsAccepted;
-        }
-
-        private async void HandleCreateDatingProfileClick(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                ViewModel!.CreateDatingProfile();
-                var mainViewModel = new MainViewModel(ViewModel.UserId, App.ConnectionString, true);
-                Frame.Navigate(typeof(MainView), mainViewModel);
-            }
-            catch (Exception ex)
-            {
-                await new ContentDialog
-                {
-                    Title = "Error",
-                    Content = ex.Message,
-                    CloseButtonText = "OK",
-                    XamlRoot = XamlRoot
-                }.ShowAsync();
-            }
-        }
     }
 }

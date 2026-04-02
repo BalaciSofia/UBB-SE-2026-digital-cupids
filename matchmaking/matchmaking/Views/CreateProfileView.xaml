@@ -71,7 +71,7 @@
                             <TextBlock Text="Name" Foreground="#333" FontSize="14" FontWeight="SemiBold"/>
                             <TextBox x:Name="NameTextBox"
                                     PlaceholderText="Enter your display name"
-                                    TextChanged="HandleNameChanged"/>
+                                    Text="{x:Bind ViewModel.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
 
                         <StackPanel Spacing="6">
@@ -83,21 +83,21 @@
                             <TextBlock Text="Location (city)" Foreground="#333" FontSize="14" FontWeight="SemiBold"/>
                             <ComboBox x:Name="LocationComboBox"
                                       PlaceholderText="Select your city"
-                                      SelectionChanged="HandleLocationChanged"/>
+                                      SelectedItem="{x:Bind ViewModel.Location, Mode=TwoWay}"/>
                         </StackPanel>
 
                         <StackPanel Spacing="6">
                             <TextBlock Text="Nationality" Foreground="#333" FontSize="14" FontWeight="SemiBold"/>
                             <TextBox x:Name="NationalityTextBox"
                                      PlaceholderText="Enter your nationality"
-                                     TextChanged="HandleNationalityChanged"/>
+                                     Text="{x:Bind ViewModel.Nationality, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
 
                         <StackPanel Spacing="6">
                             <TextBlock Text="Gender" Foreground="#333" FontSize="14" FontWeight="SemiBold"/>
                             <ComboBox x:Name="GenderComboBox"
                                       PlaceholderText="Select your gender"
-                                      SelectionChanged="HandleGenderChanged">
+                                      SelectedIndex="{x:Bind ViewModel.GenderIndex, Mode=TwoWay}">
                                 <ComboBoxItem Content="Male" Tag="MALE"/>
                                 <ComboBoxItem Content="Female" Tag="FEMALE"/>
                                 <ComboBoxItem Content="Non-Binary" Tag="NON_BINARY"/>
@@ -133,9 +133,9 @@
                                 <Run Text=" km"/>
                             </TextBlock>
                             <Slider x:Name="MaxDistanceSlider"
-                                    Minimum="1" Maximum="500" Value="50"
+                                    Minimum="1" Maximum="500"
                                     Foreground="#c0143c"
-                                    ValueChanged="HandleMaxDistanceChanged"/>
+                                    Value="{x:Bind ViewModel.MaxDistance, Mode=TwoWay}"/>
                         </StackPanel>
 
                         <StackPanel Spacing="6">
@@ -151,10 +151,9 @@
                                     x:Name="AgeRangeSelector"
                                     Minimum="18"
                                     Maximum="99"
-                                    RangeStart="18"
-                                    RangeEnd="99"
                                     StepFrequency="1"
-                                    ValueChanged="HandleAgeRangeChanged"/>
+                                    RangeStart="{x:Bind ViewModel.MinPreferredAge, Mode=TwoWay}"
+                                    RangeEnd="{x:Bind ViewModel.MaxPreferredAge, Mode=TwoWay}"/>
                             </Border>
                         </StackPanel>
 
@@ -164,7 +163,8 @@
                                 <TextBlock Text="Display Star Sign" Foreground="#333"
                                            FontSize="14" FontWeight="SemiBold"
                                            VerticalAlignment="Center"/>
-                                <ToggleSwitch x:Name="DisplayStarSignToggle"/>
+                                <ToggleSwitch x:Name="DisplayStarSignToggle"
+                                              IsOn="{x:Bind ViewModel.DisplayStarSign, Mode=TwoWay}"/>
                             </StackPanel>
                         </Border>
 
@@ -230,7 +230,7 @@
                                      AcceptsReturn="True"
                                      Height="120"
                                      MaxLength="250"
-                                     TextChanged="HandleBioTextChanged"/>
+                                     Text="{x:Bind ViewModel.Bio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
 
                         <StackPanel Spacing="6">
@@ -350,8 +350,7 @@
                         <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Center" VerticalAlignment="Center">
                             <CheckBox x:Name="TermsCheckBox"
                                       VerticalAlignment="Center"
-                                      Checked="HandleTermsConditionsChecked"
-                                      Unchecked="HandleTermsConditionsChecked"/>
+                                      IsChecked="{x:Bind ViewModel.TermsAccepted, Mode=TwoWay}"/>
                             <TextBlock VerticalAlignment="Center" FontSize="14" Foreground="#333">
                                 <Run Text="I agree to the "/>
                                 <Hyperlink NavigateUri="https://example.com/terms" Foreground="#c0143c">
@@ -380,9 +379,8 @@
                         Padding="40,12" CornerRadius="30"/>
                 <Button x:Name="CreateProfileButton"
                         Content="Create Profile"
-                        Click="HandleCreateDatingProfileClick"
+                        Command="{x:Bind ViewModel.CreateProfileCommand, Mode=OneWay}"
                         Visibility="Collapsed"
-                        IsEnabled="False"
                         Background="White" Foreground="#eb3b59"
                         FontSize="16" FontWeight="Bold"
                         Padding="40,12" CornerRadius="30"/>

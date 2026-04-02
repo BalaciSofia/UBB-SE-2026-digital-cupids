@@ -92,6 +92,17 @@ CREATE TABLE Notifications (
 );
 GO
 
+--SELECT *
+--FROM Profiles
+
+--INSERT INTO Notifications (recipientId, fromId, [type], isRead, [timestamp], title, [description]) VALUES
+--(21, 12, 'SUPER_LIKE', 0, '20260402 10:30:00 PM', 'SUPERLIKE', 'Wowowowow superlike')
+--GO
+
+--INSERT INTO Interactions (fromProfileId, toProfileId, [type]) VALUES
+--(10, 21, 'LIKE')
+--GO
+
 CREATE TABLE ProfileInterests (
     userId INT FOREIGN KEY REFERENCES Profiles(userId) ON DELETE CASCADE,
     interest VARCHAR(50),

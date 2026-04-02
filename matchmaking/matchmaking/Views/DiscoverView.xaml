@@ -31,7 +31,7 @@
             </Grid>
 
             <ScrollViewer Grid.Column="1" Padding="30">
-                <StackPanel Spacing="15">
+                <StackPanel Spacing="5">
                     <TextBlock Text="{x:Bind ViewModel.CurrentValidCandidate.Name, Mode=OneWay, TargetNullValue='N/A'}" FontSize="36" FontWeight="Bold" Foreground="White"/>
 
                     <StackPanel Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">

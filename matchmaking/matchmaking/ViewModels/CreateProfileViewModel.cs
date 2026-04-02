@@ -27,6 +27,10 @@ namespace matchmaking.ViewModels
         public RelayCommand NextPhotoCommand { get; }
         public RelayCommand PreviousPhotoCommand { get; }
         public RelayCommand CreateProfileCommand { get; }
+        public RelayCommand<int> RemovePhotoCommand { get; }
+
+        public event Action? ProfileCreated;
+        public event Action<string>? ErrorOccurred;
 
         public CreateProfileViewModel(int userId, ProfileService profileService, MockUserUtil userUtil)
         {
@@ -44,12 +48,124 @@ namespace matchmaking.ViewModels
             NextPhotoCommand = new RelayCommand(NextPhoto, () => _profileData?.Photos.Count > 0);
             PreviousPhotoCommand = new RelayCommand(PreviousPhoto, () => _profileData?.Photos.Count > 0);
             CreateProfileCommand = new RelayCommand(ExecuteCreateProfile, () => _termsAccepted);
+            RemovePhotoCommand = new RelayCommand<int>(ExecuteRemovePhoto);
         }
 
         public string Name
         {
             get => _name;
             set => SetProperty(ref _name, value);
+        }
+
+        public string Location
+        {
+            get => _profileData?.Location ?? string.Empty;
+            set
+            {
+                if (_profileData != null && _profileData.Location != value)
+                {
+                    _profileData.Location = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public string Nationality
+        {
+            get => _profileData?.Nationality ?? string.Empty;
+            set
+            {
+                if (_profileData != null && _profileData.Nationality != value)
+                {
+                    _profileData.Nationality = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public int GenderIndex
+        {
+            get
+            {
+                if (_profileData == null) return -1;
+                return _profileData.Gender switch
+                {
+                    Gender.MALE => 0,
+                    Gender.FEMALE => 1,
+                    Gender.NON_BINARY => 2,
+                    _ => 3
+                };
+            }
+            set
+            {
+                if (_profileData == null) return;
+                _profileData.Gender = value switch
+                {
+                    0 => Gender.MALE,
+                    1 => Gender.FEMALE,
+                    2 => Gender.NON_BINARY,
+                    _ => Gender.OTHER
+                };
+                OnPropertyChanged();
+            }
+        }
+
+        public double MaxDistance
+        {
+            get => _profileData?.MaxDistance ?? 50;
+            set
+            {
+                if (_profileData == null) return;
+                _profileData.MaxDistance = (int)value;
+                OnPropertyChanged();
+            }
+        }
+
+        public double MinPreferredAge
+        {
+            get => _profileData?.MinPreferredAge ?? 18;
+            set
+            {
+                if (_profileData == null) return;
+                _profileData.MinPreferredAge = (int)value;
+                OnPropertyChanged();
+            }
+        }
+
+        public double MaxPreferredAge
+        {
+            get => _profileData?.MaxPreferredAge ?? 99;
+            set
+            {
+                if (_profileData == null) return;
+                _profileData.MaxPreferredAge = (int)value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Bio
+        {
+            get => _profileData?.Bio ?? string.Empty;
+            set
+            {
+                if (_profileData == null) return;
+                _profileData.Bio = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(BioLength));
+            }
+        }
+
+        public int BioLength => Bio.Length;
+
+        public bool DisplayStarSign
+        {
+            get => _profileData?.DisplayStarSign ?? false;
+            set
+            {
+                if (_profileData == null) return;
+                _profileData.DisplayStarSign = value;
+                OnPropertyChanged();
+            }
         }
 
         public int CurrentStep
@@ -129,6 +245,17 @@ namespace matchmaking.ViewModels
                 new List<string>(),
                 null
             );
+
+            OnPropertyChanged(nameof(ProfileData));
+            OnPropertyChanged(nameof(Location));
+            OnPropertyChanged(nameof(Nationality));
+            OnPropertyChanged(nameof(GenderIndex));
+            OnPropertyChanged(nameof(MaxDistance));
+            OnPropertyChanged(nameof(MinPreferredAge));
+            OnPropertyChanged(nameof(MaxPreferredAge));
+            OnPropertyChanged(nameof(Bio));
+            OnPropertyChanged(nameof(BioLength));
+            OnPropertyChanged(nameof(DisplayStarSign));
         }
 
         public void AddPhoto(Photo photo)
@@ -241,6 +368,29 @@ namespace matchmaking.ViewModels
             _profileData.Name = _name;
             return _profileService.CreateProfile(_userId, _profileData);
         }
-        private void ExecuteCreateProfile() => CreateDatingProfile();
+        private void ExecuteCreateProfile()
+        {
+            try
+            {
+                CreateDatingProfile();
+                ProfileCreated?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                ErrorOccurred?.Invoke(ex.Message);
+            }
+        }
+
+        private void ExecuteRemovePhoto(int photoId)
+        {
+            try
+            {
+                RemovePhoto(photoId);
+            }
+            catch (Exception ex)
+            {
+                ErrorOccurred?.Invoke(ex.Message);
+            }
+        }
     }
 }
