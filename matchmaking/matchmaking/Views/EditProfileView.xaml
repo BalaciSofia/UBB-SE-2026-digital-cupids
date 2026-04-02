@@ -463,11 +463,7 @@
                         Click="SaveChanges_Click"
                         Style="{StaticResource PrimaryButtonStyle}"/>
 
-                <Button Content="Discard changes"
-                        Click="DiscardChanges_Click"
-                        Style="{StaticResource SecondaryButtonStyle}"/>
-
-                <Button Content="Archive profile"
+<Button Content="Archive profile"
                         Command="{Binding ArchiveProfileCommand}"
                         Click="ArchiveProfile_Click"
                         Style="{StaticResource SecondaryButtonStyle}"/>

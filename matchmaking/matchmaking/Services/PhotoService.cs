@@ -69,7 +69,8 @@ namespace matchmaking.Services
                 throw new Exception("The photo cannot be deleted! You must have at least 2 remaining photos.");
             }
 
-            if (File.Exists(photo.Location))
+            string storageDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "StoredPhotos");
+            if (File.Exists(photo.Location) && photo.Location.StartsWith(storageDirectory, StringComparison.OrdinalIgnoreCase))
             {
                 try
                 {
@@ -77,7 +78,7 @@ namespace matchmaking.Services
                 }
                 catch (Exception)
                 {
-                    throw new Exception("The photo cannot be deleted!");
+                    // Ignore file deletion errors — the DB record will still be removed
                 }
             }
 

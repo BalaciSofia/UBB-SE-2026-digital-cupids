@@ -17,10 +17,13 @@ namespace matchmaking.Views
         {
             base.OnNavigatedTo(e);
             ViewModel = e.Parameter as MainViewModel;
+            DataContext = ViewModel;
 
-            if (NavView.MenuItems.Count > 0)
+            if (ViewModel != null && NavView.MenuItems.Count > 0)
             {
                 NavView.SelectedItem = NavView.MenuItems[0];
+                ViewModel.InitializeNotifications();
+                ViewModel.StartPolling();
             }
         }
 
@@ -54,6 +57,7 @@ namespace matchmaking.Views
                     {
                         notificationsView.SetViewModel(ViewModel.NotificationsViewModel);
                     }
+                    ViewModel.UpdateBadge();
                     break;
 
                 case "HotSeat":
