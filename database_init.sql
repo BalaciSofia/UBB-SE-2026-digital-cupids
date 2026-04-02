@@ -326,44 +326,75 @@ INSERT INTO ProfilePreferences (userId, gender) VALUES
 GO
 
 INSERT INTO Photos (userId, location, profileOrderIndex) VALUES
-(1,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
-(1,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
-(2,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
-(2,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
-(3,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
-(3,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
-(4,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
-(4,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
-(5,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
-(5,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
-(6,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
-(6,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
-(7,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
-(7,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
-(8,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
-(8,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
-(9,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
-(9,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
-(10, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
-(10, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
-(11, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
-(11, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
-(12, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
-(12, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
-(13, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
-(13, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
-(14, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
-(14, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
-(15, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
-(15, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
-(16, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
-(16, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
-(17, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
-(17, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
-(18, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
-(18, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
-(19, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
-(19, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
-(20, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
-(20, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1);
+(1,  'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\blue.png',   0),
+(1,  'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\red.png',    1),
+(1,  'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\green.png',  2),
+
+(2,  'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\pink.png',   0),
+(2,  'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\purple.png', 1),
+
+(3,  'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\green.png',  0),
+(3,  'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\blue.png',   1),
+(3,  'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\red.png',    2),
+
+(4,  'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\purple.png', 0),
+(4,  'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\pink.png',   1),
+
+(5,  'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\red.png',    0),
+(5,  'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\green.png',  1),
+(5,  'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\blue.png',   2),
+
+(6,  'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\pink.png',   0),
+(6,  'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\purple.png', 1),
+(6,  'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\red.png',    2),
+
+(7,  'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\blue.png',   0),
+(7,  'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\green.png',  1),
+
+(8,  'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\purple.png', 0),
+(8,  'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\pink.png',   1),
+(8,  'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\blue.png',   2),
+
+(9,  'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\red.png',    0),
+(9,  'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\green.png',  1),
+
+(10, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\pink.png',   0),
+(10, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\purple.png', 1),
+(10, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\green.png',  2),
+
+(11, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\blue.png',   0),
+(11, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\purple.png', 1),
+(11, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\pink.png',   2),
+
+(12, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\green.png',  0),
+(12, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\red.png',    1),
+
+(13, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\blue.png',   0),
+(13, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\red.png',    1),
+(13, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\green.png',  2),
+
+(14, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\purple.png', 0),
+(14, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\pink.png',   1),
+
+(15, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\red.png',    0),
+(15, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\blue.png',   1),
+(15, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\green.png',  2),
+
+(16, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\purple.png', 0),
+(16, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\pink.png',   1),
+(16, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\blue.png',   2),
+
+(17, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\green.png',  0),
+(17, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\red.png',    1),
+
+(18, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\blue.png',   0),
+(18, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\purple.png', 1),
+(18, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\pink.png',   2),
+
+(19, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\pink.png',   0),
+(19, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\green.png',  1),
+
+(20, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\red.png',    0),
+(20, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\blue.png',   1),
+(20, 'C:\UBB-SE-2026-digital-cupids\placeholder_user_photos\purple.png', 2);
 GO
