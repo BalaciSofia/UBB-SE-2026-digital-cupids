@@ -119,156 +119,253 @@ INSERT INTO DatingAdmin (userId) VALUES
 SELECT *
 FROM DatingAdmin
 
--- Profiles (10 users)
 INSERT INTO Profiles 
 (userId, [name], gender, location, nationality, maxDistance, age, minPrefAge, maxPrefAge, bio, displayStarSign, isArchived, dateOfBirth, loverType, isHotSeat, boost, boostDay, hotSeatDay)
 VALUES
-(1, 'Andrei Popescu',   'MALE',       'Cluj-Napoca',       'Romanian', 100, 28, 22, 35, 'Software engineer who loves hiking and coffee.', 1, 0, '1996-03-15', 'DEEP_THINKER', NULL, NULL, NULL, NULL),
-(2, 'Maria Ionescu',    'FEMALE',     'Bucuresti',  'Romanian', 50, 25, 23, 32, 'Artist and yoga instructor. Dog mom.',          0, 0, '1999-07-22', 'SOCIAL_EXPLORER', NULL, NULL, NULL, NULL),
-(3, 'Alex Dumitrescu',  'MALE',       'Timisoasa',      'Romanian', 200, 31, 25, 38, 'Finance guy by day, amateur chef by night.',    1, 0, '1993-11-05', 'STABILITY_LOVER', NULL, NULL, NULL, NULL),
-(4, 'Elena Marinescu',  'FEMALE',     'Iasi',       'Romanian', 75, 27, 25, 34, 'Journalist. Lover of wine, books, and bad puns.',1, 0, '1997-04-18', 'EMPATHETIC_CONNECTOR', NULL, NULL, NULL, NULL),
-(5, 'Radu Stan',        'MALE',       'Brasov',     'Romanian', 300, 33, 27, 40, 'Architect with a passion for travel and photography.',0, 0, '1991-09-30', 'ADVENTURE_SEEKER', NULL, NULL, NULL, NULL),
-(6, 'Ioana Petrescu',   'FEMALE',     'Constanta',  'Romanian', 150, 29, 24, 36, 'Marine biology student. Swims every weekend.', 1, 0, '1995-12-11', 'ADVENTURE_SEEKER', NULL, NULL, NULL, NULL),
-(7, 'Sam Luca',         'NON_BINARY', 'Sibiu',      'Romanian', 500, 26, 22, 33, 'Music producer. Coffee shop regular.',        0, 0, '1998-02-28', 'SOCIAL_EXPLORER', NULL, NULL, NULL, NULL),
-(8, 'Ana Pop',          'FEMALE',     'Bihor',      'Romanian', 80, 30, 26, 37, 'UX designer who loves art and hiking.',        1, 1, '1994-06-03', 'DEEP_THINKER', NULL, NULL, NULL, NULL),
-(9, 'Mihai Georgescu',  'MALE',       'Craiova',       'Romanian', 250, 35, 28, 42, 'Chef and football fan. Looking for something real.',0, 0, '1989-08-19', 'STABILITY_LOVER', NULL, NULL, NULL, NULL),
-(10,'Alex Morgan',      'OTHER',      'Cluj-Napoca',       'Romanian', 60, 24, 18, 30, 'PhD student in literature. Pasta enthusiast.', 1, 0, '2000-01-07', NULL, NULL, NULL, NULL, NULL),
+(1,  'Andrei Pop',         'MALE',       'Cluj-Napoca', 'Romanian', 70,  27, 22, 35, 'Hiking and photography are my therapy. Weekends on summits, weekdays in logistics. Learning guitar badly but enthusiastically.',                        1, 0, '1997-03-14', 'ADVENTURE_SEEKER',     0, 0, NULL, NULL),
+(2,  'Maria Ionescu',      'FEMALE',     'Cluj-Napoca', 'Romanian', 60,  24, 20, 30, 'Art history student, coffee snob, cinema lover. I can talk for hours about film or why brutalist architecture is underrated.',                           0, 0, '2000-07-22', 'DEEP_THINKER',         0, 0, NULL, NULL),
+(3,  'Bogdan Muresan',     'MALE',       'Dej',         'Romanian', 80,  31, 25, 38, 'I know everyone at the party and remember your birthday. Events organiser who lives for bringing people together.',                                      1, 0, '1993-11-05', 'SOCIAL_EXPLORER',      0, 0, NULL, NULL),
+(4,  'Elena Vlad',         'FEMALE',     'Cluj-Napoca', 'Romanian', 55,  26, 22, 33, 'Speech therapist who believes listening is an art. I show care through small gestures. Slow mornings, markets and honest conversations.',                 1, 0, '1998-05-18', 'EMPATHETIC_CONNECTOR', 0, 0, NULL, NULL),
+(5,  'Razvan Chis',        'MALE',       'Dej',         'Romanian', 90,  34, 28, 42, 'Civil engineer. I renovated my own house, grow tomatoes and make my own țuică. Not flashy — just genuine.',                                             0, 0, '1990-09-30', 'STABILITY_LOVER',      0, 0, NULL, NULL),
+(6,  'Ioana Sabau',        'FEMALE',     'Cluj-Napoca', 'Romanian', 65,  22, 18, 28, 'Med student surviving on coffee and spite. Into yoga, indie films and debating whether a hot dog is a sandwich.',                                        0, 0, '2002-01-11', NULL,                   0, 0, NULL, NULL),
+(7,  'Alexandru Moga',     'MALE',       'Cluj-Napoca', 'Romanian', 70,  29, 24, 36, 'Rock climber and photographer. Software dev by week, summit chaser by weekend. Two local photo exhibitions — weirdly proud of that.',                    1, 0, '1995-06-23', 'ADVENTURE_SEEKER',     0, 0, NULL, NULL),
+(8,  'Diana Botar',        'FEMALE',     'Dej',         'Romanian', 75,  28, 23, 35, 'Librarian with three cats and a reading list I''ll never finish. Quiet until I''m not — get me on the right topic and I won''t stop.',                  1, 0, '1996-12-03', 'DEEP_THINKER',         0, 0, NULL, NULL),
+(9,  'Mihai Suciu',        'MALE',       'Cluj-Napoca', 'Romanian', 60,  33, 27, 40, 'Startup co-founder into urban cycling and behavioural economics. Looking for someone curious and not afraid of deep conversations.',                      0, 0, '1991-08-17', 'SOCIAL_EXPLORER',      0, 0, NULL, NULL),
+(10, 'Raluca Ferenczi',    'FEMALE',     'Dej',         'Romanian', 70,  25, 20, 31, 'Dance instructor with a weakness for mountains and terrible puns. I will eventually try to teach you salsa. Life''s too short for bad energy.',           1, 0, '1999-04-09', 'ADVENTURE_SEEKER',     0, 0, NULL, NULL),
+(11, 'Alex Toma',          'NON_BINARY', 'Cluj-Napoca', 'Romanian', 80,  27, 21, 34, 'Visual artist in mixed media. I collect experiences obsessively. Queer, neurodivergent, done with surface-level — let''s be real.',                     0, 0, '1997-10-25', 'DEEP_THINKER',         0, 0, NULL, NULL),
+(12, 'Cristina Moldovan',  'FEMALE',     'Cluj-Napoca', 'Romanian', 65,  30, 25, 38, 'Trainee psychologist. I will notice your attachment style — kindly. Trail running, wild swimming and cooking for people I care about.',                  1, 0, '1994-02-28', 'EMPATHETIC_CONNECTOR', 0, 0, NULL, NULL),
+(13, 'Tudor Balint',       'MALE',       'Dej',         'Romanian', 85,  36, 30, 44, 'Structural engineer and single dad to a funny seven-year-old. Weekends mean football, pancakes and cartoons — and I genuinely love it.',                 0, 0, '1988-07-04', 'STABILITY_LOVER',      0, 0, NULL, NULL),
+(14, 'Sonia Achim',        'FEMALE',     'Cluj-Napoca', 'Romanian', 50,  23, 19, 29, 'Literature student writing poetry at 2am. I haunt bookshops and jazz bars. An old soul who feels things very thoroughly.',                               1, 0, '2001-09-13', NULL,                   0, 0, NULL, NULL),
+(15, 'Radu Marginean',     'MALE',       'Cluj-Napoca', 'Romanian', 75,  32, 26, 39, 'Sunday league footballer who then spends hours cooking something elaborate. IT project manager — organised enough to plan a decent date.',                0, 0, '1992-05-01', 'SOCIAL_EXPLORER',      0, 0, NULL, NULL),
+(16, 'Jordan Nistor',      'NON_BINARY', 'Dej',         'Romanian', 90,  29, 23, 37, 'Bassist in a post-rock band. I think slowly, feel deeply, communicate directly. Pan, non-binary, done with surface-level anything.',                     1, 0, '1995-12-19', 'EMPATHETIC_CONNECTOR', 0, 0, NULL, NULL),
+(17, 'Gabriela Popa',      'FEMALE',     'Dej',         'Romanian', 70,  31, 26, 39, 'Personal trainer who still loves mornings. Competitive at workouts and board games equally. I cook healthy food that actually tastes good.',              1, 0, '1993-03-27', 'ADVENTURE_SEEKER',     0, 0, NULL, NULL),
+(18, 'Vlad Cosma',         'MALE',       'Cluj-Napoca', 'Romanian', 65,  28, 23, 35, 'UX designer, small circle, deep friendships. Philosophy, chess at midnight, cycling everywhere. Introverted but intentional.',                           0, 0, '1996-11-08', 'DEEP_THINKER',         0, 0, NULL, NULL),
+(19, 'Simona Rus',         'FEMALE',     'Cluj-Napoca', 'Romanian', 60,  35, 28, 43, 'Accountant with her life in order. I meal prep, water my plants and want someone consistent and kind. Drama-free, please.',                              1, 0, '1989-06-15', 'STABILITY_LOVER',      0, 0, NULL, NULL),
+(20, 'Ionut Dragomir',     'MALE',       'Dej',         'Romanian', 80,  26, 21, 33, 'Motorsport fan, traveller, eats everything. Watches every F1 race live. Easygoing until you insult Senna — then we have a problem.',                    0, 0, '1998-02-20', NULL,                   0, 0, NULL, NULL);
+GO
 
-(11,'Adrian Pop',        'MALE',       'Cluj-Napoca', 'Romanian', 120, 28, 23, 35, 'Gym enthusiast and coffee lover.', 1, 0, '1996-04-12', 'ADVENTURE_SEEKER', NULL, NULL, NULL, NULL),
-(12,'Bianca Muresan',    'FEMALE',     'Cluj-Napoca', 'Romanian', 80, 25, 22, 32, 'Bookworm and yoga fan.', 0, 0, '1999-09-21', 'DEEP_THINKER', NULL, NULL, NULL, NULL),
-(13,'Cristian Radu',     'MALE',       'Cluj-Napoca', 'Romanian', 150, 31, 25, 38, 'Tech geek and gamer.', 1, 0, '1993-07-08', 'SOCIAL_EXPLORER', NULL, NULL, NULL, NULL),
-(14,'Diana Moldovan',    'FEMALE',     'Cluj-Napoca', 'Romanian', 70, 24, 21, 30, 'Student who loves traveling.', 1, 0, '2000-02-17', 'EMPATHETIC_CONNECTOR', NULL, NULL, NULL, NULL),
-(15,'Eduard Toma',       'MALE',       'Cluj-Napoca', 'Romanian', 200, 33, 27, 40, 'Entrepreneur and foodie.', 0, 0, '1991-11-03', 'STABILITY_LOVER', NULL, NULL, NULL, NULL),
-(16,'Flavia Popescu',    'FEMALE',     'Cluj-Napoca', 'Romanian', 90, 27, 23, 34, 'Designer and plant lover.', 1, 0, '1997-06-25', 'DEEP_THINKER', NULL, NULL, NULL, NULL),
-(17,'George Stan',       'MALE',       'Cluj-Napoca', 'Romanian', 180, 35, 28, 42, 'Photographer and traveler.', 0, 0, '1989-01-14', 'ADVENTURE_SEEKER', NULL, NULL, NULL, NULL),
-(18,'Horia Iancu',       'MALE',       'Cluj-Napoca', 'Romanian', 100, 29, 24, 36, 'Runner and coffee addict.', 1, 0, '1995-03-30', 'SOCIAL_EXPLORER', NULL, NULL, NULL, NULL),
-(19,'Irina Petru',       'FEMALE',     'Cluj-Napoca', 'Romanian', 60, 26, 22, 33, 'Marketing specialist and dog lover.', 1, 0, '1998-10-09', 'EMPATHETIC_CONNECTOR', NULL, NULL, NULL, NULL),
-(20,'Ionut Badea',       'MALE',       'Cluj-Napoca', 'Romanian', 140, 32, 25, 39, 'Football fan and home chef.', 0, 0, '1992-05-19', 'STABILITY_LOVER', NULL, NULL, NULL, NULL),
-(21,'Julia Rusu',        'FEMALE',     'Cluj-Napoca', 'Romanian', 75, 24, 21, 30, 'Art student and dreamer.', 1, 0, '2000-08-11', 'SOCIAL_EXPLORER', NULL, NULL, NULL, NULL),
-(22,'Klaus Wagner',      'MALE',       'Cluj-Napoca', 'Romanian', 130, 34, 27, 41, 'Engineer who loves hiking.', 0, 0, '1990-12-22', 'ADVENTURE_SEEKER', NULL, NULL, NULL, NULL),
-(23,'Larisa Enache',     'FEMALE',     'Cluj-Napoca', 'Romanian', 85, 28, 24, 36, 'Teacher and reader.', 1, 0, '1996-01-27', 'DEEP_THINKER', NULL, NULL, NULL, NULL),
-(24,'Mihai Costin',      'MALE',       'Cluj-Napoca', 'Romanian', 160, 31, 25, 38, 'Startup enthusiast.', 0, 0, '1993-09-05', 'SOCIAL_EXPLORER', NULL, NULL, NULL, NULL),
-(25,'Nicoleta Sandu',    'FEMALE',     'Cluj-Napoca', 'Romanian', 70, 25, 22, 32, 'Fitness and nutrition lover.', 1, 0, '1999-04-14', 'ADVENTURE_SEEKER', NULL, NULL, NULL, NULL),
-(26,'Ovidiu Marin',      'MALE',       'Cluj-Napoca', 'Romanian', 120, 30, 24, 37, 'Cycling and photography.', 0, 0, '1994-02-02', 'ADVENTURE_SEEKER', NULL, NULL, NULL, NULL),
-(27,'Paula Dobre',       'FEMALE',     'Cluj-Napoca', 'Romanian', 65, 26, 22, 33, 'Yoga instructor.', 1, 0, '1998-07-18', 'EMPATHETIC_CONNECTOR', NULL, NULL, NULL, NULL),
-(28,'Razvan Ilie',       'MALE',       'Cluj-Napoca', 'Romanian', 140, 33, 26, 40, 'Finance guy who loves cooking.', 0, 0, '1991-06-06', 'STABILITY_LOVER', NULL, NULL, NULL, NULL),
-(29,'Simona Luca',       'FEMALE',     'Cluj-Napoca', 'Romanian', 80, 27, 23, 34, 'Music and festivals.', 1, 0, '1997-03-12', 'SOCIAL_EXPLORER', NULL, NULL, NULL, NULL),
-(30,'Tudor Neagu',       'MALE',       'Cluj-Napoca', 'Romanian', 150, 35, 28, 42, 'Traveler and storyteller.', 0, 0, '1989-10-25', 'ADVENTURE_SEEKER', NULL, NULL, NULL, NULL);
-
-
--- ProfileInterests
 INSERT INTO ProfileInterests (userId, interest) VALUES
-(1,  'Hiking'),        (1,  'Coffee'),       (1,  'Gaming'),
-(2,  'Yoga'),          (2,  'Painting'),      (2,  'Dogs'),
-(3,  'Cooking'),       (3,  'Finance'),       (3,  'Travel'),
-(4,  'Writing'),       (4,  'Wine'),          (4,  'Cinema'),
-(5,  'Photography'),   (5,  'Architecture'),  (5,  'Travel'),
-(6,  'Swimming'),      (6,  'Biology'),       (6,  'Diving'),
-(7,  'Music'),         (7,  'Coffee'),        (7,  'Vinyl Records'),
-(8,  'Art'),           (8,  'Hiking'),        (8,  'Design'),
-(9,  'Football'),      (9,  'Cooking'),       (9,  'Travel'),
-(10, 'Reading'),       (10, 'Cooking'),       (10, 'History');
+(1, 'Hiking'),
+(1, 'Photography'),
+(1, 'Travel'),
+(1, 'Music'),
+(1, 'Coffee'),
+(1, 'Football'),
 
--- ProfilePreferences
+(2, 'Art'),
+(2, 'Cinema'),
+(2, 'Coffee'),
+(2, 'Reading'),
+(2, 'Architecture'),
+(2, 'Writing'),
+
+(3, 'Football'),
+(3, 'Music'),
+(3, 'Travel'),
+(3, 'Cooking'),
+(3, 'Coffee'),
+(3, 'Gaming'),
+
+(4, 'Yoga'),
+(4, 'Cooking'),
+(4, 'Reading'),
+(4, 'Music'),
+(4, 'Art'),
+(4, 'Photography'),
+
+(5, 'Cooking'),
+(5, 'History'),
+(5, 'Football'),
+(5, 'Wine'),
+(5, 'Dogs'),
+(5, 'Finance'),
+
+(6, 'Yoga'),
+(6, 'Cinema'),
+(6, 'Biology'),
+(6, 'Coffee'),
+(6, 'Swimming'),
+(6, 'Reading'),
+(6, 'Music'),
+
+(7, 'Hiking'),
+(7, 'Photography'),
+(7, 'Travel'),
+(7, 'Gaming'),
+(7, 'Coffee'),
+(7, 'Design'),
+
+(8, 'Reading'),
+(8, 'Writing'),
+(8, 'Art'),
+(8, 'Music'),
+(8, 'Coffee'),
+(8, 'Cinema'),
+
+(9, 'Finance'),
+(9, 'Travel'),
+(9, 'Coffee'),
+(9, 'Design'),
+(9, 'Hiking'),
+(9, 'Gaming'),
+
+(10, 'Music'),
+(10, 'Travel'),
+(10, 'Hiking'),
+(10, 'Dogs'),
+(10, 'Yoga'),
+(10, 'Photography'),
+(10, 'Dancing'),
+
+(11, 'Art'),
+(11, 'Design'),
+(11, 'Music'),
+(11, 'Photography'),
+(11, 'Cinema'),
+(11, 'Vinyl Records'),
+
+(12, 'Hiking'),
+(12, 'Swimming'),
+(12, 'Cooking'),
+(12, 'Reading'),
+(12, 'Music'),
+(12, 'Dogs'),
+(12, 'Biology'),
+
+(13, 'Football'),
+(13, 'Cooking'),
+(13, 'History'),
+(13, 'Dogs'),
+(13, 'Finance'),
+(13, 'Music'),
+
+(14, 'Reading'),
+(14, 'Writing'),
+(14, 'Music'),
+(14, 'Cinema'),
+(14, 'Vinyl Records'),
+(14, 'Art'),
+(14, 'Coffee'),
+
+(15, 'Football'),
+(15, 'Cooking'),
+(15, 'Travel'),
+(15, 'Music'),
+(15, 'Gaming'),
+(15, 'Coffee'),
+
+(16, 'Music'),
+(16, 'Vinyl Records'),
+(16, 'Art'),
+(16, 'Cinema'),
+(16, 'Writing'),
+(16, 'Coffee'),
+(16, 'Design'),
+
+(17, 'Hiking'),
+(17, 'Cooking'),
+(17, 'Dogs'),
+(17, 'Travel'),
+(17, 'Swimming'),
+(17, 'Music'),
+
+(18, 'Design'),
+(18, 'Reading'),
+(18, 'History'),
+(18, 'Coffee'),
+(18, 'Vinyl Records'),
+(18, 'Cinema'),
+(18, 'Photography'),
+
+(19, 'Cooking'),
+(19, 'Wine'),
+(19, 'Reading'),
+(19, 'Finance'),
+(19, 'Yoga'),
+(19, 'Dogs'),
+
+(20, 'Travel'),
+(20, 'Football'),
+(20, 'Coffee'),
+(20, 'Gaming'),
+(20, 'Music'),
+(20, 'Cooking'),
+(20, 'Photography');
+GO
+
 INSERT INTO ProfilePreferences (userId, gender) VALUES
 (1,  'FEMALE'),
 (2,  'MALE'),
 (3,  'FEMALE'),
 (4,  'MALE'),
+(4,  'FEMALE'),
 (5,  'FEMALE'),
 (6,  'MALE'),
+(6,  'FEMALE'),
 (7,  'FEMALE'),
-(7,  'NON_BINARY'),
 (8,  'MALE'),
 (8,  'FEMALE'),
 (9,  'FEMALE'),
 (10, 'MALE'),
-(10, 'NON_BINARY');
-
--- Photos
-INSERT INTO Photos (userId, location, profileOrderIndex) VALUES
-(1,  'https://cdn.matchmaking.app/photos/user1_photo1.jpg', 1),
-(1,  'https://cdn.matchmaking.app/photos/user1_photo2.jpg', 2),
-(2,  'https://cdn.matchmaking.app/photos/user2_photo1.jpg', 1),
-(3,  'https://cdn.matchmaking.app/photos/user3_photo1.jpg', 1),
-(3,  'https://cdn.matchmaking.app/photos/user3_photo2.jpg', 2),
-(4,  'https://cdn.matchmaking.app/photos/user4_photo1.jpg', 1),
-(5,  'https://cdn.matchmaking.app/photos/user5_photo1.jpg', 1),
-(6,  'https://cdn.matchmaking.app/photos/user6_photo1.jpg', 1),
-(6,  'https://cdn.matchmaking.app/photos/user6_photo2.jpg', 2),
-(7,  'https://cdn.matchmaking.app/photos/user7_photo1.jpg', 1),
-(8,  'https://cdn.matchmaking.app/photos/user8_photo1.jpg', 1),
-(9,  'https://cdn.matchmaking.app/photos/user9_photo1.jpg', 1),
-(10, 'https://cdn.matchmaking.app/photos/user10_photo1.jpg', 1);
-
-INSERT INTO ProfilePreferences (userId, gender) VALUES
--- Adrian Pop (11)
+(11, 'MALE'),
 (11, 'FEMALE'),
-
--- Bianca Muresan (12)
+(11, 'NON_BINARY'),
 (12, 'MALE'),
-
--- Cristian Radu (13)
+(12, 'FEMALE'),
 (13, 'FEMALE'),
-
--- Diana Moldovan (14)
 (14, 'MALE'),
-
--- Eduard Toma (15)
 (15, 'FEMALE'),
-
--- Flavia Popescu (16)
 (16, 'MALE'),
-
--- George Stan (17)
-(17, 'FEMALE'),
-
--- Horia Iancu (18)
+(16, 'FEMALE'),
+(16, 'NON_BINARY'),
+(17, 'MALE'),
 (18, 'FEMALE'),
-
--- Irina Petru (19)
 (19, 'MALE'),
+(19, 'FEMALE'),
+(20, 'FEMALE');
+GO
 
--- Ionut Badea (20)
-(20, 'FEMALE'),
-
--- Julia Rusu (21)
-(21, 'MALE'),
-
--- Klaus Wagner (22)
-(22, 'FEMALE'),
-
--- Larisa Enache (23)
-(23, 'MALE'),
-
--- Mihai Costin (24)
-(24, 'FEMALE'),
-
--- Nicoleta Sandu (25)
-(25, 'MALE'),
-
--- Ovidiu Marin (26)
-(26, 'FEMALE'),
-
--- Paula Dobre (27)
-(27, 'MALE'),
-
--- Razvan Ilie (28)
-(28, 'FEMALE'),
-
--- Simona Luca (29)
-(29, 'MALE'),
-
--- Tudor Neagu (30)
-(30, 'FEMALE'),
-
--- Add a few more diverse preferences (optional realism)
-(18, 'NON_BINARY'),
-(21, 'NON_BINARY'),
-(24, 'NON_BINARY'),
-(27, 'FEMALE'),
-(30, 'NON_BINARY');
-
+INSERT INTO Photos (userId, location, profileOrderIndex) VALUES
+(1,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
+(1,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
+(2,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
+(2,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
+(3,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
+(3,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
+(4,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
+(4,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
+(5,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
+(5,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
+(6,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
+(6,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
+(7,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
+(7,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
+(8,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
+(8,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
+(9,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
+(9,  'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
+(10, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
+(10, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
+(11, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
+(11, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
+(12, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
+(12, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
+(13, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
+(13, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
+(14, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
+(14, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
+(15, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
+(15, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
+(16, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
+(16, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
+(17, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
+(17, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
+(18, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
+(18, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
+(19, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
+(19, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
+(20, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
+(20, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1);
 GO
 
 CREATE TRIGGER trg_DeleteProfile
@@ -289,12 +386,3 @@ BEGIN
     DELETE FROM Profiles           WHERE userId = @id;
 END;
 GO
-
-SELECT *
-FROM Profiles
-
-update Profiles
-set isHotSeat=0
-where userId=1
-
-select * from Bids
