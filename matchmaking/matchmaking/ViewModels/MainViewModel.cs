@@ -44,7 +44,7 @@ namespace matchmaking.ViewModels
 
             DiscoverViewModel = new DiscoverViewModel(userId, discoverService, registerInteraction, firstLoad);
             NotificationsViewModel = new NotificationsViewModel(userId, notificationService);
-            HotSeatViewModel = new HotSeatViewModel(userId, profileService, bidService, registerInteraction);
+            HotSeatViewModel = new HotSeatViewModel(userId, profileService, bidService, registerInteraction,interactionService);
             EditProfileViewModel = new EditProfileViewModel(userId, profileService, photoService, questionaireUtil, interestUtil);
         }
     }

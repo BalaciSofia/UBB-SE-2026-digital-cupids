@@ -13,6 +13,7 @@ namespace matchmaking.ViewModels
         private ProfileService _profileService;
         private BidService _bidService;
         private RegisterInteractionUseCase _registerInteractionUseCase;
+        private InteractionService _interactionService;
 
         private int _userId;
         private DatingProfile _hotSeatProfile;
@@ -137,12 +138,13 @@ namespace matchmaking.ViewModels
         public ICommand NextPhotoCommand { get; }
         public ICommand PreviousPhotoCommand { get; }
 
-        public HotSeatViewModel(int userId, ProfileService profileService, BidService bidService, RegisterInteractionUseCase registerInteractionUseCase)
+        public HotSeatViewModel(int userId, ProfileService profileService, BidService bidService, RegisterInteractionUseCase registerInteractionUseCase,InteractionService interactionService)
         {
             _userId = userId;
             _profileService = profileService;
             _bidService = bidService;
             _registerInteractionUseCase = registerInteractionUseCase;
+            _interactionService = interactionService;
 
             LoadHotSeatCommand = new RelayCommand(LoadHotSeat);
             PlaceBidCommand = new RelayCommand(PlaceBid);
@@ -191,12 +193,13 @@ namespace matchmaking.ViewModels
                 System.Diagnostics.Debug.WriteLine("[LoadHotSeat] NO HOT SEAT PROFILE FOUND!");
             }
 
-            var userProfile = _profileService.GetProfileById(_userId);
-            _isBoosted = userProfile != null && userProfile.IsBoosted && userProfile.BoostDay == DateTime.Today.Day;
-            OnPropertyChanged(nameof(CanBoost));
-
-            _hasLiked = false;
-            _hasSuperLiked = false;
+            var sentInteractions = _interactionService.FindBySenderId(_userId);
+            _hasLiked = sentInteractions.Any(i =>
+                i.ToProfileId == HotSeatProfile?.UserId &&
+                i.Type == InteractionType.LIKE);
+            _hasSuperLiked = sentInteractions.Any(i =>
+                i.ToProfileId == HotSeatProfile?.UserId &&
+                i.Type == InteractionType.SUPER_LIKE);
             OnPropertyChanged(nameof(CanLike));
             OnPropertyChanged(nameof(CanSuperLike));
 
