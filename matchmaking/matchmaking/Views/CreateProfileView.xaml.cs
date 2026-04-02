@@ -330,7 +330,7 @@ namespace matchmaking.Views
         {
             Border[] slots = { PhotoSlot0, PhotoSlot1, PhotoSlot2, PhotoSlot3, PhotoSlot4, PhotoSlot5 };
             List<Photo> photos = ViewModel!.ProfileData!.Photos;
-            bool canRemove = photos.Count > 2;
+            bool canRemove = true;
             bool canAdd = photos.Count < 6;
 
             SolidColorBrush transparent = new SolidColorBrush(Colors.Transparent);

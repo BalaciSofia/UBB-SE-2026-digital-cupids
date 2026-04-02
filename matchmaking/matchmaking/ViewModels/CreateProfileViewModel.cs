@@ -146,8 +146,6 @@ namespace matchmaking.ViewModels
         {
             var photo = _profileData.Photos.FirstOrDefault(p => p.PhotoId == photoId);
             if (photo == null) return;
-            if (_profileData.Photos.Count <= 2)
-                throw new InvalidOperationException("You must have at least 2 photos!");
 
             _profileData.Photos.Remove(photo);
             for (int i = 0; i < _profileData.Photos.Count; i++)
